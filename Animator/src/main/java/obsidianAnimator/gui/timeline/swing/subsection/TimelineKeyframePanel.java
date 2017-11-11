@@ -3,7 +3,6 @@ package obsidianAnimator.gui.timeline.swing.subsection;
 import obsidianAPI.render.part.Part;
 import obsidianAnimator.gui.timeline.BlankMouseListener;
 import obsidianAnimator.gui.timeline.Keyframe;
-import obsidianAnimator.gui.timeline.changes.ChangeDeleteKeyFrame;
 import obsidianAnimator.gui.timeline.changes.ChangeMoveKeyframe;
 import obsidianAnimator.gui.timeline.swing.component.CopyLabel;
 
@@ -35,7 +34,7 @@ public class TimelineKeyframePanel extends JPanel
 	private int timelineLength;	
 	private int timelineOffset = 0;
 	private static final int MAX_PARTS = 15;
-	private static final int MAX_FRAMES = 50;
+	private int MAX_FRAMES = 50;
 
 	public TimelineKeyframePanel(TimelineKeyframeController controller)
 	{
@@ -79,6 +78,18 @@ public class TimelineKeyframePanel extends JPanel
 			public void mousePressed(MouseEvent arg0) 
 			{
 				controller.setExceptionPart(null);
+			}
+		});
+		addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e)
+			{
+				int change = e.getUnitsToScroll();
+				int newMaxValue = Math.max(50, MAX_FRAMES + change);
+				MAX_FRAMES = newMaxValue;
+				timeSlider.setMaximum(MAX_FRAMES + timelineOffset);
+				hbar.setVisibleAmount(MAX_FRAMES);
+				hbar.setMaximum(Math.max(timelineOffset + MAX_FRAMES, timelineLength));
 			}
 		});
 		timeTextField.addKeyListener(new KeyAdapter()
@@ -251,7 +262,7 @@ public class TimelineKeyframePanel extends JPanel
 	private Dictionary<Integer, JLabel> createLabelTabel()
 	{
 		Dictionary<Integer, JLabel> dictionary = new Hashtable<Integer, JLabel>();
-		for(int i = 0; i < Math.ceil(timelineLength/10F); i++)
+		for (int i = 0; i < Math.ceil((timelineOffset + MAX_FRAMES) / 10F); i++)
 			dictionary.put(i*10, new JLabel(Integer.toString(i*10)));
 		return dictionary;
 	}
