@@ -8,8 +8,6 @@ import java.util.Map;
 
 public class Util
 {
-
-
     /**
      * Calculate which frame an animation is on based on the time that it started at, which frame it started at, and its FPS.
      *
@@ -32,14 +30,14 @@ public class Util
     public static AnimationSequence createTransition(ModelObj model, String animName, Map<String, float[]> from, Map<String, float[]> to, float duration)
     {
         AnimationSequence seq = new AnimationSequence(model.entityName, "transition_" + animName);
-        seq.setFPS(10);
+        seq.setFPS(25);
 
         for (Map.Entry<String, float[]> entry : from.entrySet())
         {
             float[] fromPart = entry.getKey().equals("entitypos") ? new float[] {0f, entry.getValue()[1], 0f} : entry.getValue();
             float[] toPart = to.get(entry.getKey());
 
-            AnimationPart part = new AnimationPart(0, (int) (duration * 10f), fromPart, toPart, model.getPartFromName(entry.getKey()));
+            AnimationPart part = new AnimationPart(0, (int) (duration * 25f), fromPart, toPart, model.getPartFromName(entry.getKey()));
             seq.addAnimation(part);
         }
 
