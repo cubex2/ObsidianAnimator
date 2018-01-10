@@ -1,22 +1,52 @@
 package obsidianAPI;
 
 import net.minecraft.util.MathHelper;
-import org.lwjgl.util.vector.ReadableVector4f;
 
-public class Quaternion extends org.lwjgl.util.vector.Quaternion
+public class Quaternion
 {
+
+    public float x, y, z, w;
+
     public Quaternion()
     {
+        setIdentity();
     }
 
-    public Quaternion(ReadableVector4f src)
+    public Quaternion(Quaternion src)
     {
-        super(src);
+        this(src.x, src.y, src.z, src.w);
     }
 
     public Quaternion(float x, float y, float z, float w)
     {
-        super(x, y, z, w);
+        set(x, y, z, w);
+    }
+
+    public void set(float x, float y, float z, float w)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+    }
+
+    public Quaternion setIdentity()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.w = 1;
+        return this;
+    }
+
+    public final float length()
+    {
+        return (float) Math.sqrt(lengthSquared());
+    }
+
+    public float lengthSquared()
+    {
+        return x * x + y * y + z * z + w * w;
     }
 
     public Quaternion add(Quaternion q)
@@ -37,17 +67,30 @@ public class Quaternion extends org.lwjgl.util.vector.Quaternion
 
     public Quaternion negate()
     {
-        return (Quaternion) negate(new Quaternion());
+        Quaternion dest = new Quaternion();
+        dest.x = -this.x;
+        dest.y = -this.y;
+        dest.z = -this.z;
+        dest.w = this.w;
+        return dest;
     }
 
-    public Quaternion scale(float f)
+    public Quaternion scale(float scale)
     {
-        return (Quaternion) scale(f, this, new Quaternion());
+        Quaternion dest = new Quaternion();
+        dest.x = this.x * scale;
+        dest.y = this.y * scale;
+        dest.z = this.z * scale;
+        dest.w = this.w * scale;
+        return dest;
     }
 
-    public Quaternion normalize()
+    public Quaternion normalise()
     {
-        return (Quaternion) normalise(new Quaternion());
+        float inv_l = 1f / this.length();
+        Quaternion dest = new Quaternion();
+        dest.set(this.x * inv_l, this.y * inv_l, this.z * inv_l, this.w * inv_l);
+        return dest;
     }
 
     /**
@@ -99,6 +142,12 @@ public class Quaternion extends org.lwjgl.util.vector.Quaternion
         return new Quaternion(qx, qy, qz, qw);
     }
 
+    public static float dot(Quaternion left, Quaternion right)
+    {
+        return left.x * right.x + left.y * right.y + left.z * right.z + left.w
+                                                                        * right.w;
+    }
+
     public static Quaternion slerp(Quaternion q0, Quaternion q1, float alpha)
     {
         q0 = new Quaternion(q0);
@@ -121,7 +170,7 @@ public class Quaternion extends org.lwjgl.util.vector.Quaternion
         dot = MathHelper.clamp_double(dot, -1, 1);
         double theta = Math.acos(dot) * alpha;
 
-        Quaternion q2 = q1.sub(q0.scale((float) dot)).normalize();
+        Quaternion q2 = q1.sub(q0.scale((float) dot)).normalise();
 
         Quaternion scaledq0 = q0.scale((float) Math.cos(theta));
         return scaledq0.add(q2.scale((float) Math.sin(theta)));
@@ -132,6 +181,6 @@ public class Quaternion extends org.lwjgl.util.vector.Quaternion
         return new Quaternion(q0.x + (q1.x - q0.x) * alpha,
                               q0.y + (q1.y - q0.y) * alpha,
                               q0.z + (q1.z - q0.z) * alpha,
-                              q0.w + (q1.w - q0.w) * alpha).normalize();
+                              q0.w + (q1.w - q0.w) * alpha).normalise();
     }
 }
