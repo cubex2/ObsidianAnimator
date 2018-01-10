@@ -20,6 +20,11 @@ public abstract class ModelAnimated extends ModelObj
     {
         super.setRotationAngles(swingTime, swingMax, f2, lookX, lookY, f5, entity);
 
+        updateAnimation(entity);
+    }
+
+    public void updateAnimation(Entity entity)
+    {
         EntityAnimationProperties animProps = (EntityAnimationProperties) entity.getExtendedProperties("Animation");
         if (animProps == null)
         {
