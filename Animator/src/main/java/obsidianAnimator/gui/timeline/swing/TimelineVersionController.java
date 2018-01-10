@@ -47,7 +47,7 @@ public class TimelineVersionController extends TimelineControllerSub
 
     public void redo()
     {
-        if (animationVersion < changes.size() && changes.size() > 0)
+        if (animationVersion < changes.size() - 1 && changes.size() > 0)
         {
             changes.get(animationVersion + 1).apply(mainController, mainController.currentAnimation);
             animationVersion++;
