@@ -1,8 +1,9 @@
-package obsidianAPI.render;
+package obsidianAnimations.entity;
 
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import obsidianAPI.render.ModelAnimated;
 
 public class RenderObj extends RenderLiving
 {

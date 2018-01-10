@@ -1,7 +1,6 @@
 package obsidianAnimations.entity;
 
 import net.minecraft.util.ResourceLocation;
-import obsidianAPI.render.RenderObj;
 
 public class RenderDummyPlayer extends RenderObj
 {
