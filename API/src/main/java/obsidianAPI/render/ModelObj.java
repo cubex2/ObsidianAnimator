@@ -5,10 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelFormatException;
 import net.minecraftforge.client.model.obj.GroupObject;
@@ -17,6 +14,7 @@ import obsidianAPI.animation.AnimationParenting;
 import obsidianAPI.animation.PartGroups;
 import obsidianAPI.render.bend.Bend;
 import obsidianAPI.render.part.*;
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -34,6 +32,7 @@ public class ModelObj extends ModelBase
     protected ArrayList<Bend> bends = new ArrayList<Bend>();
     public PartGroups partGroups;
     private Map<PartObj, float[]> defaults;
+    private boolean hasProps = false;
 
     public static final float initRotFix = 180.0F;
     public static final float offsetFixY = -1.5F;
@@ -73,6 +72,11 @@ public class ModelObj extends ModelBase
                 defaults.put(obj, arr);
             }
         }
+    }
+
+    public boolean hasProps()
+    {
+        return hasProps;
     }
 
     public float[] getDefaults(PartObj part)
@@ -137,29 +141,43 @@ public class ModelObj extends ModelBase
                 }
             }
 
+            NBTTagCompound nbt = null;
+            if (!nbtData.equals(""))
+            {
+                nbt = nbtFromString(nbtData);
+            }
+
+            if (nbt != null)
+            {
+                hasProps = nbt.getBoolean("HasProps");
+            }
+
             loadModel(modelData);
             loadAdditionalPartData(partData);
 
             //Only load setup if it exists - it won't if file is fresh from Blender.
-            if (!nbtData.equals(""))
+            if (nbt != null)
             {
-                //Write nbt data to temp file so it can be read by compressed stream tools.
-                File tmp = new File("tmp");
-                if (!tmp.exists())
-                    tmp.createNewFile();
-
-                FileWriter fw = new FileWriter(tmp);
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(nbtData);
-                bw.close();
-                fw.close();
-
-                loadSetup(CompressedStreamTools.read(tmp));
-
-                tmp.delete();
+                loadSetup(nbt);
             }
             reader.close();
         } catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
+    }
+
+    private NBTTagCompound nbtFromString(String nbtData) throws IOException
+    {
+        NBTTagCompound nbt;
+        DataInputStream dis = null;
+        try
+        {
+            dis = new DataInputStream(new ByteArrayInputStream(nbtData.getBytes("UTF-8")));
+            nbt = CompressedStreamTools.func_152456_a(dis, NBTSizeTracker.field_152451_a);
+        } finally
+        {
+            IOUtils.closeQuietly(dis);
+        }
+
+        return nbt;
     }
 
     private void loadModel(String modelData) throws ModelFormatException, UnsupportedEncodingException
@@ -167,17 +185,38 @@ public class ModelObj extends ModelBase
         model = new WavefrontObject(this.entityName, new ByteArrayInputStream(modelData.getBytes("UTF-8")));
         parts = createPartObjList(model.groupObjects);
         parts.add(new PartEntityPos(this));
-        if (entityName.equals("player"))
+        if (hasProps || entityName.equals("player"))
         {
-            parts.add(new PartPropRotation(this));
-            parts.add(new PartPropTranslation(this));
-            parts.add(new PartPropScale(this));
-
-            parts.add(new PartPropRotation(this, "prop_rot_l"));
-            parts.add(new PartPropTranslation(this, "prop_trans_l"));
-            parts.add(new PartPropScale(this, "prop_scale_l"));
+            addProps();
         }
         partGroups = new PartGroups(this);
+    }
+
+    public void setHasProps(boolean value)
+    {
+        if (value)
+        {
+            hasProps = true;
+
+            addProps();
+        } else
+        {
+            hasProps = false;
+        }
+    }
+
+    private void addProps()
+    {
+        if (parts.stream().anyMatch(p -> p instanceof PartPropRotation))
+            return;
+
+        parts.add(new PartPropRotation(this));
+        parts.add(new PartPropTranslation(this));
+        parts.add(new PartPropScale(this));
+
+        parts.add(new PartPropRotation(this, "prop_rot_l"));
+        parts.add(new PartPropTranslation(this, "prop_trans_l"));
+        parts.add(new PartPropScale(this, "prop_scale_l"));
     }
 
     private void loadAdditionalPartData(String partData)
@@ -410,6 +449,7 @@ public class ModelObj extends ModelBase
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setTag("Parenting", AnimationParenting.getSaveData(this));
         nbt.setTag("Groups", partGroups.getSaveData());
+        nbt.setBoolean("HasProps", hasProps);
         return nbt;
     }
 
