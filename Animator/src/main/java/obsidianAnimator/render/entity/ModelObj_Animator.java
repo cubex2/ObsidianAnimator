@@ -17,6 +17,7 @@ public class ModelObj_Animator extends ModelObj
 
     private PartObj mainHighlight = null;
     private List<PartObj> hightlightedParts;
+    private ResourceLocation texture;
 
     public static final ResourceLocation pinkResLoc = new ResourceLocation("mod_obsidian_animator:defaultModelTextures/pink.png");
     public static final ResourceLocation whiteResLoc = new ResourceLocation("mod_obsidian_animator:defaultModelTextures/white.png");
@@ -33,10 +34,15 @@ public class ModelObj_Animator extends ModelObj
 
     private ModelObj_Animator(String entityName, File modelFile, ResourceLocation model, ResourceLocation texture)
     {
-        super(entityName, modelFile, model, texture);
+        super(entityName, modelFile, model);
         hightlightedParts = new ArrayList<PartObj>();
+        this.texture = texture;
     }
 
+    public ResourceLocation getTexture()
+    {
+        return texture;
+    }
 
     @Override
     protected PartObj createPart(GroupObject group)

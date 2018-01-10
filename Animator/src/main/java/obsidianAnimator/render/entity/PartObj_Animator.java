@@ -123,7 +123,7 @@ public class PartObj_Animator extends PartObj
             texture = ModelObj_Animator.whiteResLoc;
         else
         {
-            texture = modelObj.getTexture(entity);
+            texture = ((ModelObj_Animator) modelObj).getTexture();
             useHighlightCoords = false;
         }
 

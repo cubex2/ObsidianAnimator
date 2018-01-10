@@ -36,7 +36,7 @@ public class BendPart_Animator extends BendPart
             texture = ModelObj_Animator.whiteResLoc;
         else
         {
-            texture = modelObj.getTexture(entity);
+            texture = ((ModelObj_Animator) modelObj).getTexture();
             useHighlightCoords = false;
         }
 

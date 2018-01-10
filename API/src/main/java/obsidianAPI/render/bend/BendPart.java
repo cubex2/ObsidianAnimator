@@ -100,9 +100,9 @@ public class BendPart extends GroupObject
     {
         ResourceLocation texture;
 
-        texture = modelObj.getTexture(entity);
+        //texture = modelObj.getTexture(entity);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+        //Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 
         for (int i = 0; i < 8; i++)
         {

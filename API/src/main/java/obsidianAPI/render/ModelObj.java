@@ -38,33 +38,25 @@ public class ModelObj extends ModelBase
     public static final float initRotFix = 180.0F;
     public static final float offsetFixY = -1.5F;
 
-    private final ResourceLocation txtRL;
-
-    public ModelObj(String entityName, ResourceLocation modelLocation, ResourceLocation textureLocation)
+    public ModelObj(String entityName, ResourceLocation modelLocation)
     {
-        this(entityName, null, modelLocation, textureLocation);
+        this(entityName, null, modelLocation);
     }
 
-    public ModelObj(String entityName, File modelFile, ResourceLocation textureLocation)
+    public ModelObj(String entityName, File modelFile)
     {
-        this(entityName, modelFile, null, textureLocation);
+        this(entityName, modelFile, null);
     }
 
-    protected ModelObj(String entityName, File modelFile, ResourceLocation modelLocation, ResourceLocation textureLocation)
+    protected ModelObj(String entityName, File modelFile, ResourceLocation modelLocation)
     {
         this.entityName = entityName;
         defaults = Maps.newHashMap();
-        txtRL = textureLocation;
         if (modelFile != null)
             load(modelFile);
         else
             load(modelLocation);
         init();
-    }
-
-    public ResourceLocation getTexture(Entity entity)
-    {
-        return txtRL;
     }
 
     public void init()

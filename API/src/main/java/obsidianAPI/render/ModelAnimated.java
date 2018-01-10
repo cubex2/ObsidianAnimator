@@ -10,9 +10,9 @@ import java.util.Map;
 
 public abstract class ModelAnimated extends ModelObj
 {
-    public ModelAnimated(String entityName, ResourceLocation modelLocation, ResourceLocation textureLocation)
+    public ModelAnimated(String entityName, ResourceLocation modelLocation)
     {
-        super(entityName, modelLocation, textureLocation);
+        super(entityName, modelLocation);
     }
 
     @Override

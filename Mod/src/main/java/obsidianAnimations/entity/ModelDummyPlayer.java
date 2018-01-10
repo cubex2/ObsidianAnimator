@@ -10,11 +10,10 @@ public class ModelDummyPlayer extends ModelAnimated
 
     private PartObj head, chestLw;
     private static final ResourceLocation modelRL = new ResourceLocation("mod_obsidian_animations:models/biped.obm");
-    private static final ResourceLocation textureRL = new ResourceLocation("mod_obsidian_animations:models/player.png");
 
     public ModelDummyPlayer()
     {
-        super("dummy", modelRL, textureRL);
+        super("dummy", modelRL);
         head = getPartObjFromName("head");
         chestLw = getPartObjFromName("chestLw");
     }

@@ -2,7 +2,6 @@ package obsidianAPI.render.part;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.client.model.obj.Face;
 import net.minecraftforge.client.model.obj.GroupObject;
@@ -161,9 +160,6 @@ public class PartObj extends PartRotation
      */
     public void updateTextureCoordinates(Entity entity, boolean mainHighlight, boolean otherHighlight, boolean bindTexture)
     {
-        if (bindTexture)
-            Minecraft.getMinecraft().getTextureManager().bindTexture(modelObj.getTexture(entity));
-
         for (Face f : groupObj.faces)
         {
             f.textureCoordinates = defaultTextureCoords.get(f);
@@ -182,7 +178,6 @@ public class PartObj extends PartRotation
             child.render(entity);
 
         GL11.glPopMatrix();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(modelObj.getTexture(entity));
     }
 
     /**
