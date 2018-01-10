@@ -2,9 +2,9 @@ package obsidianAnimations;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.entity.player.EntityPlayer;
-import obsidianAPI.render.player.RenderPlayerAnimated;
 import obsidianAnimations.entity.EntityDummyPlayer;
 import obsidianAnimations.entity.RenderDummyPlayer;
+import obsidianAnimations.entity.RenderPlayerAnimated;
 
 public class ClientProxy extends CommonProxy
 {

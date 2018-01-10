@@ -1,4 +1,4 @@
-package obsidianAPI.render.player;
+package obsidianAnimations.entity;
 
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
