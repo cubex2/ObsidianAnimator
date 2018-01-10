@@ -15,7 +15,7 @@ public class GuiInventoryChooseItem extends GuiInventory
 
     private final boolean leftHand;
     private TimelineItemController controller;
-	private EntityObj entity;
+    private EntityObj entity;
 
     public GuiInventoryChooseItem(boolean leftHand, TimelineItemController controller, EntityObj entity)
     {
@@ -25,7 +25,7 @@ public class GuiInventoryChooseItem extends GuiInventory
         this.entity = entity;
         this.leftHand = leftHand;
     }
-    
+
     /**
      * Adds the buttons (and other controls) to the screen in question.
      */
@@ -34,23 +34,23 @@ public class GuiInventoryChooseItem extends GuiInventory
         this.buttonList.clear();
         this.mc.displayGuiScreen(new GuiContainerChooseItem(this.mc.thePlayer, this));
     }
-    
+
     /**
      * Called from the main game loop to update the screen.
      */
     public void updateScreen()
     {
-    	this.mc.displayGuiScreen(new GuiContainerChooseItem(this.mc.thePlayer, this));
+        this.mc.displayGuiScreen(new GuiContainerChooseItem(this.mc.thePlayer, this));
     }
-    
+
     public void setItemStack(ItemStack itemStack)
     {
         if (leftHand)
             ModelHandler.modelRenderer.setLeftItem(itemStack);
         else
-    	    this.entity.setCurrentItem(itemStack);
-    	controller.display();
+            this.entity.setCurrentItem(itemStack);
+        controller.display();
     }
-	
+
 
 }

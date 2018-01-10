@@ -20,121 +20,122 @@ import java.util.List;
 public class PartObj_Animator extends PartObj
 {
 
-	public PartObj_Animator(ModelObj_Animator modelObject, GroupObject groupObj)
-	{
-		super(modelObject, groupObj);
-	}
+    public PartObj_Animator(ModelObj_Animator modelObject, GroupObject groupObj)
+    {
+        super(modelObject, groupObj);
+    }
 
-	//----------------------------------------------------------------
-	// 							 Selection
-	//----------------------------------------------------------------
+    //----------------------------------------------------------------
+    // 							 Selection
+    //----------------------------------------------------------------
 
-	/**
-	 * Test to see if a ray insects with this part.
-	 * @param p0 - Point on ray.
-	 * @param p1 - Another point on ray.
-	 * @return - Minimum distance from p0 to part, null if no intersect exists.
-	 */
-	public Double testRay()
-	{		
-		GL11.glPushMatrix();
+    /**
+     * Test to see if a ray insects with this part.
+     *
+     * @param p0 - Point on ray.
+     * @param p1 - Another point on ray.
+     * @return - Minimum distance from p0 to part, null if no intersect exists.
+     */
+    public Double testRay()
+    {
+        GL11.glPushMatrix();
 
-		//Get all parents that need compensating for.
-		List<PartObj> parents = new ArrayList<PartObj>();
-		PartObj p = this;
-		parents.add(p);
-		while(p.hasParent())
-		{
-			p = p.getParent();
-			parents.add(0, p);
-		}
+        //Get all parents that need compensating for.
+        List<PartObj> parents = new ArrayList<PartObj>();
+        PartObj p = this;
+        parents.add(p);
+        while (p.hasParent())
+        {
+            p = p.getParent();
+            parents.add(0, p);
+        }
 
-		//Compensate for all parents. TODO remove compensate Part rotation method
-		for(PartObj q : parents)
-			q.move();
-		
-		Double min = null;
-		for(Face f : groupObj.faces)
-		{
-			//System.out.println(groupObj.faces.get(0).vertices[0].x + ", " + groupObj.faces.get(0).vertices[0].y + ", " + groupObj.faces.get(0).vertices[0].z);
-			Double d = MathHelper.rayIntersectsFace(RayTrace.getRayTrace(), f);
-			if(d != null && (min == null || d < min))
-				min = d;
-		}
-		
-		GL11.glPopMatrix();
-		return min;	
-	}
+        //Compensate for all parents. TODO remove compensate Part rotation method
+        for (PartObj q : parents)
+            q.move();
 
-	//------------------------------------------
-	//         Rendering and Rotating
-	//------------------------------------------
+        Double min = null;
+        for (Face f : groupObj.faces)
+        {
+            //System.out.println(groupObj.faces.get(0).vertices[0].x + ", " + groupObj.faces.get(0).vertices[0].y + ", " + groupObj.faces.get(0).vertices[0].z);
+            Double d = MathHelper.rayIntersectsFace(RayTrace.getRayTrace(), f);
+            if (d != null && (min == null || d < min))
+                min = d;
+        }
 
-	/**
-	 * Stores the current texture coordinates in default texture coords.
-	 * This is required in case a bend is removed, then the texture coords can be restored.
-	 * XXX
-	 */
-	public void setDefaultTCsToCurrentTCs()
-	{
-		for(Face f : groupObj.faces)
-		{
-			if(f.textureCoordinates == null)
-			{
-				f.textureCoordinates = new TextureCoordinate[3];
-				for(int i = 0; i < 3; i++)
-				{
-					f.textureCoordinates[i] = new TextureCoordinate(0, 0);
-				}
-			}   
+        GL11.glPopMatrix();
+        return min;
+    }
 
-			TextureCoordinate[] coordsToStore = new TextureCoordinate[3];
-			for(int i = 0; i < 3; i++)
-			{
-				coordsToStore[i] = new TextureCoordinate(f.textureCoordinates[i].u, f.textureCoordinates[i].v);
-			}
+    //------------------------------------------
+    //         Rendering and Rotating
+    //------------------------------------------
 
-			defaultTextureCoords.put(f, coordsToStore);
-		}
-	}
+    /**
+     * Stores the current texture coordinates in default texture coords.
+     * This is required in case a bend is removed, then the texture coords can be restored.
+     * XXX
+     */
+    public void setDefaultTCsToCurrentTCs()
+    {
+        for (Face f : groupObj.faces)
+        {
+            if (f.textureCoordinates == null)
+            {
+                f.textureCoordinates = new TextureCoordinate[3];
+                for (int i = 0; i < 3; i++)
+                {
+                    f.textureCoordinates[i] = new TextureCoordinate(0, 0);
+                }
+            }
 
-	@Override
-	public void updateTextureCoordinates(Entity entity)
-	{	
-		updateTextureCoordinates(entity, ((ModelObj_Animator) modelObj).isMainHighlight(this), ((ModelObj_Animator) modelObj).isPartHighlighted(this), true);
-	}
+            TextureCoordinate[] coordsToStore = new TextureCoordinate[3];
+            for (int i = 0; i < 3; i++)
+            {
+                coordsToStore[i] = new TextureCoordinate(f.textureCoordinates[i].u, f.textureCoordinates[i].v);
+            }
 
-	/**
-	 * Change the texture coordinates and texture if the part is highlighted.
-	 */
-	@Override
-	public void updateTextureCoordinates(Entity entity, boolean mainHighlight, boolean otherHighlight, boolean bindTexture)
-	{		
-		boolean useHighlightCoords = true;
-		ResourceLocation texture;
-		TextureCoordinate[] highlightCoords = new TextureCoordinate[]{
-				new TextureCoordinate(0.0F, 0.0F), 
-				new TextureCoordinate(0.5F, 0.0F), 
-				new TextureCoordinate(0.0F, 0.5F)};
-		if(mainHighlight)
-			texture = ModelObj_Animator.pinkResLoc;
-		else if(otherHighlight)
-			texture = ModelObj_Animator.whiteResLoc;
-		else
-		{
-			texture = modelObj.getTexture(entity);
-			useHighlightCoords = false;
-		}
+            defaultTextureCoords.put(f, coordsToStore);
+        }
+    }
 
-		if(bindTexture)
-			Minecraft.getMinecraft().getTextureManager().bindTexture(texture);		
+    @Override
+    public void updateTextureCoordinates(Entity entity)
+    {
+        updateTextureCoordinates(entity, ((ModelObj_Animator) modelObj).isMainHighlight(this), ((ModelObj_Animator) modelObj).isPartHighlighted(this), true);
+    }
 
-		for(Face f : groupObj.faces)
-		{
-			if(useHighlightCoords)
-				f.textureCoordinates = highlightCoords;
-			else
-				f.textureCoordinates = defaultTextureCoords.get(f);
-		}
-	}
+    /**
+     * Change the texture coordinates and texture if the part is highlighted.
+     */
+    @Override
+    public void updateTextureCoordinates(Entity entity, boolean mainHighlight, boolean otherHighlight, boolean bindTexture)
+    {
+        boolean useHighlightCoords = true;
+        ResourceLocation texture;
+        TextureCoordinate[] highlightCoords = new TextureCoordinate[] {
+                new TextureCoordinate(0.0F, 0.0F),
+                new TextureCoordinate(0.5F, 0.0F),
+                new TextureCoordinate(0.0F, 0.5F)};
+        if (mainHighlight)
+            texture = ModelObj_Animator.pinkResLoc;
+        else if (otherHighlight)
+            texture = ModelObj_Animator.whiteResLoc;
+        else
+        {
+            texture = modelObj.getTexture(entity);
+            useHighlightCoords = false;
+        }
+
+        if (bindTexture)
+            Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+
+        for (Face f : groupObj.faces)
+        {
+            if (useHighlightCoords)
+                f.textureCoordinates = highlightCoords;
+            else
+                f.textureCoordinates = defaultTextureCoords.get(f);
+        }
+    }
 }

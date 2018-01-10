@@ -1,8 +1,8 @@
 package obsidianAnimator.gui;
 
-public interface ExternalFrame 
+public interface ExternalFrame
 {
-	
-	public void updateExternalFrameFromDisplay();
+
+    public void updateExternalFrameFromDisplay();
 
 }

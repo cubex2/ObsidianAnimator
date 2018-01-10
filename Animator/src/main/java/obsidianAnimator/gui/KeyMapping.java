@@ -1,7 +1,6 @@
 package obsidianAnimator.gui;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -9,7 +8,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.util.Collection;
-import java.util.Map;
 
 public class KeyMapping
 {
@@ -59,7 +57,7 @@ public class KeyMapping
         for (KeyAction action : actions)
         {
             if (action.shift == GuiScreen.isShiftKeyDown() &&
-                    action.ctrl == GuiScreen.isCtrlKeyDown())
+                action.ctrl == GuiScreen.isCtrlKeyDown())
             {
                 action.action.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_FIRST, ""));
                 return true;

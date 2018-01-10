@@ -30,7 +30,7 @@ public class ActionPointsFrame extends JFrame
             {
                 for (String s : animation.getActionPoints(time))
                 {
-                    animation.removeActionPoint(time,s);
+                    animation.removeActionPoint(time, s);
                 }
 
                 for (String s : Splitter.on(',').split(actionField.getText()))
@@ -53,8 +53,9 @@ public class ActionPointsFrame extends JFrame
             }
         });
 
-        actionField.setText(getTextForAnimations(animation,time));
-        actionField.getDocument().addDocumentListener(new DocumentListener() {
+        actionField.setText(getTextForAnimations(animation, time));
+        actionField.getDocument().addDocumentListener(new DocumentListener()
+        {
             @Override
             public void insertUpdate(DocumentEvent e)
             {

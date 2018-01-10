@@ -7,19 +7,19 @@ import net.minecraft.util.ResourceLocation;
 public class RenderObj extends RenderLiving
 {
 
-	private ResourceLocation texture;
-	
-	public RenderObj(ModelAnimated model, ResourceLocation texture)
-	{
-		//TODO shadow size?
-		super(model, 1.0F);
-		this.texture = texture;
-	}
-	
-	@Override
-	protected ResourceLocation getEntityTexture(Entity p_110775_1_) 
-	{
-		return texture;
-	}
+    private ResourceLocation texture;
+
+    public RenderObj(ModelAnimated model, ResourceLocation texture)
+    {
+        //TODO shadow size?
+        super(model, 1.0F);
+        this.texture = texture;
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(Entity p_110775_1_)
+    {
+        return texture;
+    }
 
 }

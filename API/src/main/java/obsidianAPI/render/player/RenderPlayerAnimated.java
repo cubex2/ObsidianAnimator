@@ -6,19 +6,19 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderPlayerAnimated extends RenderPlayer
 {
-	
-	private static final ResourceLocation texture = new ResourceLocation("mod_obsidian_animations:models/player.png");
-	
-	public RenderPlayerAnimated()
-	{
-		super();
-		this.mainModel = new ModelAnimatedPlayer();
-	}
-	
-	@Override
-	protected ResourceLocation getEntityTexture(Entity p_110775_1_) 
-	{
-		return texture;
-	}
+
+    private static final ResourceLocation texture = new ResourceLocation("mod_obsidian_animations:models/player.png");
+
+    public RenderPlayerAnimated()
+    {
+        super();
+        this.mainModel = new ModelAnimatedPlayer();
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(Entity p_110775_1_)
+    {
+        return texture;
+    }
 
 }

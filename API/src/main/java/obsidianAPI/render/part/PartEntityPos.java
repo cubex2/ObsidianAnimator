@@ -8,9 +8,9 @@ import obsidianAPI.render.ModelObj;
 public class PartEntityPos extends Part
 {
 
-	public PartEntityPos(ModelObj mObj) 
-	{
-		super(mObj, "entitypos");
-	}
+    public PartEntityPos(ModelObj mObj)
+    {
+        super(mObj, "entitypos");
+    }
 
 }

@@ -29,14 +29,14 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
 
     private long now;
 
-	private int nextFrame = 0;
+    private int nextFrame = 0;
 
-	private float prevEntityPosX;
-	private float prevEntityPosZ;
+    private float prevEntityPosX;
+    private float prevEntityPosZ;
 
-	private Runnable onFinished;
+    private Runnable onFinished;
 
-	private float frameTime = 0f;
+    private float frameTime = 0f;
 
     @Override
     public void init(Entity entity, World world)
@@ -100,7 +100,7 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
             loop = false;
             AnimationSequence next = AnimationRegistry.getAnimation(entityName, binding);
 
-            activeAnimation = Util.createTransition(model,next.getName(), currentValues, next.getPartValuesAtTime(model,0f),transitionTime);
+            activeAnimation = Util.createTransition(model, next.getName(), currentValues, next.getPartValuesAtTime(model, 0f), transitionTime);
             onFinished = () ->
             {
                 animationStartTime = now;
@@ -109,8 +109,7 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
                 loop = loopAnim;
                 activeAnimation = next;
             };
-        }
-        else
+        } else
         {
             this.loop = loopAnim;
             activeAnimation = AnimationRegistry.getAnimation(entityName, binding);
@@ -121,13 +120,13 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
     {
         if (activeAnimation == null || !activeAnimation.getName().equals("Idle"))
         {
-            setActiveAnimation(model, "Idle", true,transitionTime);
+            setActiveAnimation(model, "Idle", true, transitionTime);
         }
     }
 
     public void clearAnimation(ModelObj model)
     {
-        clearAnimation(model,0.25f);
+        clearAnimation(model, 0.25f);
     }
 
     public void setMultiplier(float multiplier)
@@ -188,9 +187,9 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
                 float strafe = entityPosX - prevEntityPosX;
                 float forward = entityPosZ - prevEntityPosZ;
 
-                float f4 = MathHelper.sin(entity.rotationYaw * (float)Math.PI / 180.0F);
-                float f5 = MathHelper.cos(entity.rotationYaw * (float)Math.PI / 180.0F);
-                entity.setPosition(entity.posX + (double)(strafe * f5 - forward * f4), entity.posY,entity.posZ + (double)(forward * f5 + strafe * f4));
+                float f4 = MathHelper.sin(entity.rotationYaw * (float) Math.PI / 180.0F);
+                float f5 = MathHelper.cos(entity.rotationYaw * (float) Math.PI / 180.0F);
+                entity.setPosition(entity.posX + (double) (strafe * f5 - forward * f4), entity.posY, entity.posZ + (double) (forward * f5 + strafe * f4));
 
                 prevEntityPosX = entityPosX;
                 prevEntityPosZ = entityPosZ;
@@ -210,8 +209,7 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
                 } else if (onFinished != null)
                 {
                     onFinished.run();
-                }
-                else
+                } else
                 {
                     clearAnimation(model);
                 }

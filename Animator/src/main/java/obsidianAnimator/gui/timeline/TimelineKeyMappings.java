@@ -54,9 +54,9 @@ public class TimelineKeyMappings
         keyMappings.handleMinecraftKey(par2);
     }
 
-	/* ---------------------------------------------------- *
+    /* ---------------------------------------------------- *
      * 				   		Actions							*
-	 * ---------------------------------------------------- */
+     * ---------------------------------------------------- */
 
     private class SpaceAction extends AbstractAction
     {
