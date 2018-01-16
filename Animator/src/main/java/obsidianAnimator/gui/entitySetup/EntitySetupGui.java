@@ -16,6 +16,17 @@ public class EntitySetupGui extends GuiEntityRenderer
     }
 
     @Override
+    public void updateScreen()
+    {
+        super.updateScreen();
+
+        if (controller.shouldReloadTexture())
+        {
+            controller.reloadTexture();
+        }
+    }
+
+    @Override
     protected void keyTyped(char par1, int par2)
     {
         if (par2 == Keyboard.KEY_ESCAPE)

@@ -55,7 +55,7 @@ public class EntitySetupFrame extends JFrame
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("Part Setup", new EntitySetupPartPanel(controller));
         tabbedPane.add("Parenting", parentingPanel);
-        tabbedPane.add("Misc", new EntitySetupMiscPanel(controller));
+        tabbedPane.add("Misc", new EntitySetupMiscPanel(this, controller));
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());

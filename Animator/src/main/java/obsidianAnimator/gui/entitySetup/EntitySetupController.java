@@ -1,6 +1,9 @@
 package obsidianAnimator.gui.entitySetup;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.ResourceLocation;
 import obsidianAPI.animation.AnimationParenting;
 import obsidianAPI.animation.PartGroups;
 import obsidianAPI.render.part.Part;
@@ -18,12 +21,37 @@ public class EntitySetupController
     private EntitySetupGui gui;
     private EntitySetupFrame frame;
 
+    private boolean shouldReloadTexture = false;
+
     public EntitySetupController(String entityName)
     {
         gui = new EntitySetupGui(entityName, this);
         this.partGroups = gui.entityModel.partGroups;
 
         frame = new EntitySetupFrame(this);
+    }
+
+    public void scheduleTextureReload()
+    {
+        shouldReloadTexture = true;
+    }
+
+    public boolean shouldReloadTexture()
+    {
+        return shouldReloadTexture;
+    }
+
+    public void reloadTexture()
+    {
+        shouldReloadTexture = false;
+        ResourceLocation location = getEntityModel().getTexture();
+
+        TextureManager manager = Minecraft.getMinecraft().getTextureManager();
+        ITextureObject tobj = manager.getTexture(location);
+        if (tobj != null)
+        {
+            manager.loadTexture(location, tobj);
+        }
     }
 
     public void display()

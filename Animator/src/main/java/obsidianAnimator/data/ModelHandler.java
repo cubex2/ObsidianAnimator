@@ -99,7 +99,7 @@ public class ModelHandler
         return models.keySet();
     }
 
-    private static void copyFileToPersistentMemory(File file, String destFileName)
+    public static void copyFileToPersistentMemory(File file, String destFileName)
     {
         File copy = new File(Persistence.modelFolder, destFileName);
         try
