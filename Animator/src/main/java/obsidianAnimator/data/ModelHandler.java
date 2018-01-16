@@ -21,9 +21,9 @@ public class ModelHandler
 
     public static String importModel(File modelFile, File textureFile)
     {
-        copyFileToPersistentMemory(modelFile);
-        copyFileToPersistentMemory(textureFile);
+        copyFileToPersistentMemory(modelFile, modelFile.getName());
         ModelObj_Animator model = loadModelFromFile(modelFile);
+        copyFileToPersistentMemory(textureFile, model.entityName + ".png");
         updateRenderer(model.entityName);
         return model.entityName;
     }
@@ -99,9 +99,9 @@ public class ModelHandler
         return models.keySet();
     }
 
-    private static void copyFileToPersistentMemory(File file)
+    private static void copyFileToPersistentMemory(File file, String destFileName)
     {
-        File copy = new File(Persistence.modelFolder, file.getName());
+        File copy = new File(Persistence.modelFolder, destFileName);
         try
         {
             if (copy.exists())
