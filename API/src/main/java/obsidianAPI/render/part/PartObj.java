@@ -95,7 +95,7 @@ public class PartObj extends PartRotation
     @Override
     public String getDisplayName()
     {
-        return displayName;
+        return displayName == null ? getName() : displayName;
     }
 
     public void setDisplayName(String displayName)
