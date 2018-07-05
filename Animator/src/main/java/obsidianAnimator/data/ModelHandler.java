@@ -1,28 +1,40 @@
 package obsidianAnimator.data;
 
-import net.minecraft.nbt.CompressedStreamTools;
+import com.google.common.collect.Lists;
 import net.minecraft.util.ResourceLocation;
+import obsidianAPI.data.ModelDefinition;
+import obsidianAPI.io.ModelExporter;
+import obsidianAPI.io.ModelFileLoader;
+import obsidianAPI.io.ModelImporter;
+import obsidianAPI.io.ModelLoader;
+import obsidianAPI.render.ModelObj;
+import obsidianAPI.render.part.Part;
+import obsidianAPI.render.part.PartObj;
 import obsidianAnimator.file.FileHandler;
 import obsidianAnimator.render.entity.ModelObj_Animator;
 import obsidianAnimator.render.entity.RenderObj_Animator;
 import org.apache.commons.io.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ModelHandler
 {
-
-    private static Map<String, ModelObj_Animator> models = new HashMap<String, ModelObj_Animator>();
+    private static Map<String, ModelObj_Animator> models = new HashMap<>();
 
     public static RenderObj_Animator modelRenderer = new RenderObj_Animator();
 
     public static String importModel(File modelFile, File textureFile)
     {
-        copyFileToPersistentMemory(modelFile, modelFile.getName());
-        ModelObj_Animator model = loadModelFromFile(modelFile);
+        ModelDefinition definition = ModelImporter.INSTANCE.importModel(modelFile);
+        File persistedFile = new File(Persistence.modelFolder, modelFile.getName());
+        ModelExporter.INSTANCE.save(definition, persistedFile);
+
+        ModelObj_Animator model = loadModelFromFile(persistedFile);
         copyFileToPersistentMemory(textureFile, model.entityName + ".png");
         updateRenderer(model.entityName);
         return model.entityName;
@@ -42,16 +54,6 @@ public class ModelHandler
         return model;
     }
 
-    public static ModelObj_Animator loadModelFromResource(String entityName)
-    {
-        ResourceLocation modelResource = generateInternalModelResourceLocation(entityName);
-        ResourceLocation textureResource = generateInternalTextureResourceLocation(entityName);
-
-        ModelObj_Animator model = new ModelObj_Animator(entityName, modelResource, textureResource);
-        models.put(model.entityName, model);
-        return model;
-    }
-
     /**
      * Generates a resource location for a png texture file that is in the external
      * animation folder.
@@ -59,24 +61,6 @@ public class ModelHandler
     private static ResourceLocation generateTextureResourceLocation(String entityName)
     {
         return new ResourceLocation(String.format("animation:models/%s.png", entityName));
-    }
-
-    /**
-     * Generates a resource location for an obm model file that is in the internal
-     * assets folder, i.e. within in jar.
-     */
-    private static ResourceLocation generateInternalModelResourceLocation(String entityName)
-    {
-        return new ResourceLocation(String.format("mod_obsidian_animator:models/%s.obm", entityName));
-    }
-
-    /**
-     * Generates a resource location for an png texture file that is in the internal
-     * assets folder, i.e. within in jar.
-     */
-    private static ResourceLocation generateInternalTextureResourceLocation(String entityName)
-    {
-        return new ResourceLocation(String.format("mod_obsidian_animator:models/%s.png", entityName));
     }
 
     public static void updateRenderer(String entityName)
@@ -112,52 +96,46 @@ public class ModelHandler
 
     public static void saveFiles()
     {
-        for (String s : models.keySet())
-            makeModelFile(s);
+        for (ModelObj model : models.values())
+            makeModelFile(model);
     }
 
-    private static void makeModelFile(String entityName)
+    public static void updateModel(ModelObj_Animator oldModel, ModelObj_Animator newModel)
     {
-        File f = new File(Persistence.modelFolder, entityName + "." + FileHandler.modelExtension);
+        List<Part> parts = Lists.newArrayList();
+        parts.addAll(oldModel.getPartObjs());
+        newModel.getPartObjs().stream().filter(p -> !parts.contains(p))
+                .forEach(parts::add);
 
-        //Models that don't have files will have been imported from internal resources,
-        //therefore don't need saving to a model file.
-        if (f.exists())
+        oldModel.getParts().stream().filter(p -> !(p instanceof PartObj))
+                .filter(p -> !parts.contains(p))
+                .forEach(parts::add);
+
+        newModel.getParts().stream().filter(p -> !(p instanceof PartObj))
+                .filter(p -> !parts.contains(p))
+                .forEach(parts::add);
+
+        for (PartObj partObj : newModel.getPartObjs())
         {
-            String textAfterNBT = getTextAfterNBT(f);
-
-            try
+            int index = oldModel.getPartObjs().indexOf(partObj);
+            if (index >= 0)
             {
-                CompressedStreamTools.write(ModelHandler.getModel(entityName).createNBTTag(), f);
-                FileWriter fw = new FileWriter(f, true);
-                fw.write(textAfterNBT);
-                fw.close();
-            } catch (IOException e) {e.printStackTrace();}
-        }
-    }
-
-    private static String getTextAfterNBT(File f)
-    {
-        String text = "\n";
-
-        try
-        {
-            BufferedReader reader = new BufferedReader(new FileReader(f));
-
-            boolean nbtFinished = false;
-            String currentLine;
-            while ((currentLine = reader.readLine()) != null)
-            {
-                if (currentLine.contains("# Model #"))
-                    nbtFinished = true;
-
-                if (nbtFinished)
-                    text += currentLine + "\n";
+                oldModel.getPartObjs().get(index).updateValues(partObj);
             }
-            reader.close();
-        } catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
+        }
 
-        return text;
+        oldModel.getParts().clear();
+        oldModel.getParts().addAll(parts);
+
+        oldModel.model = newModel.model;
+
+        saveFiles();
     }
 
+    private static void makeModelFile(ModelObj model)
+    {
+        File f = new File(Persistence.modelFolder, model.entityName + "." + FileHandler.modelExtension);
+
+        ModelExporter.INSTANCE.save(model.definition, f);
+    }
 }

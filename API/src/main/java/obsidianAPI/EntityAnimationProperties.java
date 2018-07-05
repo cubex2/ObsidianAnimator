@@ -142,7 +142,7 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
     {
         Map<String, float[]> values = Maps.newHashMap();
 
-        for (Part part : model.parts)
+        for (Part part : model.getParts())
         {
             values.put(part.getName(), part.getOriginalValues());
         }
@@ -156,7 +156,7 @@ public class EntityAnimationProperties implements IExtendedEntityProperties
 
         float time = getAnimationFrameTime();
 
-        for (Part part : model.parts)
+        for (Part part : model.getParts())
         {
             values.put(part.getName(), activeAnimation.getPartValueAtTime(part, time));
         }

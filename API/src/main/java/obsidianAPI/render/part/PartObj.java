@@ -38,6 +38,15 @@ public class PartObj extends PartRotation
         setDefaultTCsToCurrentTCs();
     }
 
+    public void updateValues(PartObj part)
+    {
+        if (part.rotationPoint != null)
+            rotationPoint = part.rotationPoint;
+        defaultTextureCoords = part.defaultTextureCoords;
+        groupObj = part.groupObj;
+        setDefaultTCsToCurrentTCs();
+    }
+
     public void setParent(PartObj parent)
     {
         this.parent = parent;

@@ -13,13 +13,7 @@ public class Persistence
     private static final File saveFile = new File(ObsidianAnimator.animationPath, "save.data");
     public static final File modelFolder = new File(ObsidianAnimator.animationPath + "/models");
 
-    private static FilenameFilter modelFileFilter = new FilenameFilter()
-    {
-        public boolean accept(File dir, String name)
-        {
-            return name.toLowerCase().endsWith(".obm");
-        }
-    };
+    private static FilenameFilter modelFileFilter = (dir, name) -> name.toLowerCase().endsWith(".obm");
 
     public static void save()
     {

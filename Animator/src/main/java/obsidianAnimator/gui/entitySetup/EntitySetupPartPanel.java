@@ -1,5 +1,7 @@
 package obsidianAnimator.gui.entitySetup;
 
+import obsidianAPI.render.ModelObj;
+import obsidianAPI.render.part.Part;
 import obsidianAPI.render.part.PartObj;
 import obsidianAnimator.gui.timeline.BlankMouseListener;
 
@@ -12,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class EntitySetupPartPanel extends JPanel
@@ -33,7 +36,7 @@ public class EntitySetupPartPanel extends JPanel
         GridBagConstraints c = new GridBagConstraints();
 
         //Init variables
-        currentGroups = controller.getPartGroups().getGroupListAsString();
+        currentGroups = controller.getPartGroups().getGroupListString();
         partPanels = new ArrayList<PartPanel>();
         //Add a part panel for each part.
         for (PartObj p : controller.getEntityModel().getPartObjs())
@@ -50,7 +53,7 @@ public class EntitySetupPartPanel extends JPanel
             public void actionPerformed(ActionEvent arg0)
             {
                 controller.getPartGroups().addGroup(groupNameTextField.getText());
-                currentGroups = controller.getPartGroups().getGroupListAsString();
+                currentGroups = controller.getPartGroups().getGroupListString();
                 currentGroupsLabel.setText(currentGroups);
                 updateGroupComboBoxes();
             }
@@ -207,13 +210,39 @@ public class EntitySetupPartPanel extends JPanel
             if (newOrder.get(i).equals(movingPanel))
                 newPos = i;
         }
-        controller.getPartGroups().changeOrder(movingPanel.part, newPos - oldPos);
+        changeOrder(controller.getEntityModel(), movingPanel.part, newPos - oldPos);
 
         //Update and redraw.
         partPanels = newOrder;
         removePartPanels();
         addPartPanels();
         partMainPanel.revalidate();
+    }
+
+    public static void changeOrder(ModelObj model, Part part, int change)
+    {
+        int currentPos = 0;
+        for (int i = 0; i < model.getParts().size(); i++)
+        {
+            if (model.getParts().get(i).equals(part))
+                currentPos = i;
+        }
+        boolean flag = true;
+        if (currentPos == 0 && change < 0)
+            flag = false;
+        if (currentPos == model.getParts().size() - 1 && change > 0)
+            flag = false;
+        if (flag)
+        {
+            Collection<Part> parts = model.getParts();
+            synchronized ( parts )
+            {
+                model.getParts().remove(part);
+                model.getParts().add(currentPos + change, part);
+            }
+
+            model.updatePartOrder();
+        }
     }
 
     /**
@@ -225,7 +254,7 @@ public class EntitySetupPartPanel extends JPanel
 
         private PartObj part;
         private boolean drawUpperInsert = false, drawLowerInsert = false;
-        private JComboBox box;
+        private JComboBox<String> box;
 
         private PartPanel(final PartObj part)
         {
@@ -252,10 +281,10 @@ public class EntitySetupPartPanel extends JPanel
 
             c.gridx = 2;
             c.weightx = 0;
-            box = new JComboBox();
+            box = new JComboBox<>();
             box.setPreferredSize(new Dimension(200, 20));
             box.addActionListener(new GroupDropDownActionListener(part));
-            box.setSelectedItem(controller.getPartGroups().getPartGroup(part));
+            box.setSelectedItem(controller.getPartGroups().getGroup(part));
             add(box, c);
 
             c.weightx = 0;
@@ -365,8 +394,8 @@ public class EntitySetupPartPanel extends JPanel
     {
         for (PartPanel p : partPanels)
         {
-            p.box.setModel(new DefaultComboBoxModel(controller.getPartGroups().getGroupListAsArray()));
-            p.box.setSelectedItem(controller.getPartGroups().getPartGroup(p.part));
+            p.box.setModel(new DefaultComboBoxModel(controller.getPartGroups().getGroups().toArray(new String[0])));
+            p.box.setSelectedItem(controller.getPartGroups().getGroup(p.part));
         }
     }
 
@@ -392,7 +421,7 @@ public class EntitySetupPartPanel extends JPanel
 
         private void update()
         {
-            part.setDisplayName(textField.getText());
+            part.modelObj.updatePartDisplayName(part, textField.getText());
         }
     }
 
@@ -408,7 +437,14 @@ public class EntitySetupPartPanel extends JPanel
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            controller.getPartGroups().setPartGroup((String) ((JComboBox) e.getSource()).getSelectedItem(), part);
+            String newGroup = (String) ((JComboBox) e.getSource()).getSelectedItem();
+            if (newGroup != null)
+            {
+                controller.getPartGroups().setGroupForPart(newGroup, part);
+            } else
+            {
+                controller.getPartGroups().setGroupForPart("Default", part);
+            }
         }
     }
 

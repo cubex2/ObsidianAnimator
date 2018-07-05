@@ -62,7 +62,7 @@ public class GuiEntityRenderer extends GuiBlack
         entityToRender = new EntityObj(Minecraft.getMinecraft().theWorld, entityName);
 
         //Setup parts list.
-        for (Part part : entityModel.parts)
+        for (Part part : entityModel.getParts())
         {
             parts.add(part);
             part.setToOriginalValues();

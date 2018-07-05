@@ -86,7 +86,7 @@ public class ChangeMirror implements AnimationChange
         String mirrorSide = side.equals("L") ? "R" : "L";
         String mirrorName = prefix + mirrorSide;
 
-        for (Part p : model.parts)
+        for (Part p : model.getParts())
         {
             if (p.getName().equals(mirrorName) || p.getDisplayName().equals(mirrorName))
                 return p;

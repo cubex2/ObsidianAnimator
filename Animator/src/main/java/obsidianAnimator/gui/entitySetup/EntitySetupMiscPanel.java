@@ -4,6 +4,7 @@ import obsidianAnimator.data.ModelHandler;
 import obsidianAnimator.file.FileChooser;
 import obsidianAnimator.file.FileHandler;
 import obsidianAnimator.file.FileNotChosenException;
+import obsidianAnimator.render.entity.ModelObj_Animator;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -53,5 +54,21 @@ public class EntitySetupMiscPanel extends JPanel
             }
         });
         add(selectNewTexture);
+
+        JButton updateModel = new JButton("Update Model");
+        updateModel.setToolTipText("Update the model. This will only update the mesh. Parenting, part names, etc. remain unchanged.");
+        updateModel.addActionListener(e -> {
+            /*try
+            {
+                File targetFile = FileChooser.loadImportFile(frame, FileHandler.modelFilter);
+                ModelObj_Animator newModel = new ModelObj_Animator(controller.getEntityModel().entityName, targetFile, controller.getEntityModel().getTexture());
+                ModelHandler.updateModel(controller.getEntityModel(), newModel);
+            } catch (FileNotChosenException e1)
+            {
+                e1.printStackTrace();
+            }*/
+        });
+        updateModel.setEnabled(false);
+        add(updateModel);
     }
 }

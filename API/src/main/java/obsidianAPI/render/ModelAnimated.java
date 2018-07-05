@@ -1,18 +1,18 @@
 package obsidianAPI.render;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 import obsidianAPI.EntityAnimationProperties;
 import obsidianAPI.animation.AnimationSequence;
+import obsidianAPI.data.ModelDefinition;
 import obsidianAPI.render.part.Part;
 
 import java.util.Map;
 
 public abstract class ModelAnimated extends ModelObj
 {
-    public ModelAnimated(String entityName, ResourceLocation modelLocation)
+    public ModelAnimated(ModelDefinition definition)
     {
-        super(entityName, modelLocation);
+        super(definition);
     }
 
     @Override
@@ -28,7 +28,7 @@ public abstract class ModelAnimated extends ModelObj
         EntityAnimationProperties animProps = (EntityAnimationProperties) entity.getExtendedProperties("Animation");
         if (animProps == null)
         {
-            parts.forEach(Part::setToOriginalValues);
+            getParts().forEach(Part::setToOriginalValues);
         } else
         {
             updateMoveAnimation(entity, animProps);
@@ -72,6 +72,6 @@ public abstract class ModelAnimated extends ModelObj
 
     private void animateToPartValues(EntityAnimationProperties animProps, Map<String, float[]> partValues)
     {
-        parts.forEach(p -> p.setValues(partValues.get(p.getName())));
+        getParts().forEach(p -> p.setValues(partValues.get(p.getName())));
     }
 }

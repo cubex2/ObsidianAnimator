@@ -2,6 +2,8 @@ package obsidianAnimator.render.entity;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.GroupObject;
+import obsidianAPI.data.ModelDefinition;
+import obsidianAPI.io.ModelFileLoader;
 import obsidianAPI.render.ModelObj;
 import obsidianAPI.render.bend.Bend;
 import obsidianAPI.render.part.Part;
@@ -24,17 +26,17 @@ public class ModelObj_Animator extends ModelObj
 
     public ModelObj_Animator(String entityName, ResourceLocation model, ResourceLocation texture)
     {
-        this(entityName, null, model, texture);
+        this(ModelFileLoader.INSTANCE.load(model), texture);
     }
 
     public ModelObj_Animator(String entityName, File modelFile, ResourceLocation texture)
     {
-        this(entityName, modelFile, null, texture);
+        this(ModelFileLoader.INSTANCE.load(modelFile), texture);
     }
 
-    private ModelObj_Animator(String entityName, File modelFile, ResourceLocation model, ResourceLocation texture)
+    private ModelObj_Animator(ModelDefinition definition, ResourceLocation texture)
     {
-        super(entityName, modelFile, model);
+        super(definition);
         hightlightedParts = new ArrayList<PartObj>();
         this.texture = texture;
     }
@@ -64,9 +66,9 @@ public class ModelObj_Animator extends ModelObj
     {
         PartObj closestPart = null;
         Double min = null;
-        synchronized ( parts )
+        synchronized ( getParts() )
         {
-            for (Part part : parts)
+            for (Part part : getParts())
             {
                 if (part instanceof PartObj_Animator)
                 {
@@ -80,7 +82,7 @@ public class ModelObj_Animator extends ModelObj
                 }
             }
         }
-        for (Bend bend : bends)
+        for (Bend bend : getBends())
         {
             if (bend instanceof Bend_Animator)
             {
@@ -142,5 +144,16 @@ public class ModelObj_Animator extends ModelObj
     public boolean isPartHighlighted(PartObj partObj)
     {
         return hightlightedParts.contains(partObj);
+    }
+
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ModelObj_Animator model = (ModelObj_Animator) o;
+        return model.entityName.equals(entityName);
     }
 }

@@ -163,7 +163,7 @@ public class AnimationSequence
      */
     public void animateAll(float time, ModelObj entityModel, String exceptionPartName)
     {
-        for (Part part : entityModel.parts)
+        for (Part part : entityModel.getParts())
         {
             if (!part.getName().equals(exceptionPartName))
             {
@@ -183,7 +183,7 @@ public class AnimationSequence
     public Map<String, float[]> getPartValuesAtTime(ModelObj entityModel, float time)
     {
         Map<String, float[]> partValues = new HashMap<String, float[]>();
-        for (Part part : entityModel.parts)
+        for (Part part : entityModel.getParts())
             partValues.put(part.getName(), getPartValueAtTime(part, time));
         return partValues;
     }
@@ -271,7 +271,7 @@ public class AnimationSequence
 
     public void loadData(NBTTagCompound compound)
     {
-        entityName = compound.getString("EntityName");
+        entityName = "Slicer27";// compound.getString("EntityName");
         NBTTagList segmentList = compound.getTagList("Animations", 10);
         for (int i = 0; i < segmentList.tagCount(); i++)
         {

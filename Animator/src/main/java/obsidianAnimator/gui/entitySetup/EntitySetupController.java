@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import obsidianAPI.animation.AnimationParenting;
-import obsidianAPI.animation.PartGroups;
+import obsidianAPI.animation.PartGrouping;
 import obsidianAPI.render.part.Part;
 import obsidianAPI.render.part.PartObj;
 import obsidianAnimator.gui.GuiBlack;
@@ -17,7 +17,7 @@ import javax.swing.*;
 public class EntitySetupController
 {
 
-    private PartGroups partGroups;
+    private PartGrouping partGroups;
     private EntitySetupGui gui;
     private EntitySetupFrame frame;
 
@@ -26,7 +26,7 @@ public class EntitySetupController
     public EntitySetupController(String entityName)
     {
         gui = new EntitySetupGui(entityName, this);
-        this.partGroups = gui.entityModel.partGroups;
+        this.partGroups = gui.entityModel.grouping;
 
         frame = new EntitySetupFrame(this);
     }
@@ -108,7 +108,7 @@ public class EntitySetupController
         gui.selectedPart = part;
     }
 
-    public PartGroups getPartGroups()
+    public PartGrouping getPartGroups()
     {
         return partGroups;
     }

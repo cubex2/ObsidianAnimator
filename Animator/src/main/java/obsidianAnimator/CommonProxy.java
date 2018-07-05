@@ -16,7 +16,7 @@ public class CommonProxy
 
     public void registerModels()
     {
-        ModelHandler.loadModelFromResource("player");
+        // ModelHandler.loadModelFromResource("player");
     }
 
     public void registerRendering() {}

@@ -59,30 +59,4 @@ public class AnimationParenting
         parentNBT.setTag("Parenting", parentNBTList);
         return parentNBT;
     }
-
-    public static void loadData(NBTTagCompound compound, ModelObj model)
-    {
-        NBTTagList parentNBTList = compound.getTagList("Parenting", 10);
-
-        for (int i = 0; i < parentNBTList.tagCount(); i++)
-        {
-            NBTTagCompound parentCompound = parentNBTList.getCompoundTagAt(i);
-            PartObj parent = model.getPartObjFromName(parentCompound.getString("Parent"));
-            int j = 0;
-            while (parentCompound.hasKey("Child" + j))
-            {
-                String name = parentCompound.getString("Child" + j);
-                boolean hasBend = false;
-                if (name.endsWith("*"))
-                {
-                    name = name.substring(0, name.length() - 1);
-                    hasBend = true;
-                }
-                PartObj child = model.getPartObjFromName(name);
-
-                model.setParent(child, parent, hasBend);
-                j++;
-            }
-        }
-    }
 }

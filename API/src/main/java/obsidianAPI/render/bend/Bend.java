@@ -330,5 +330,23 @@ public class Bend
         return true;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Bend bend = (Bend) o;
+
+        if (!parent.equals(bend.parent)) return false;
+        return child.equals(bend.child);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = parent.hashCode();
+        result = 31 * result + child.hashCode();
+        return result;
+    }
 }

@@ -129,7 +129,7 @@ public class TimelineKeyframePanel extends JPanel
             }
         });
 
-        vbar = new JScrollBar(JScrollBar.VERTICAL, 0, MAX_PARTS, 0, numParts);
+        vbar = new JScrollBar(JScrollBar.VERTICAL, 0, MAX_PARTS, 0, Math.max(numParts, MAX_PARTS));
         vbar.addAdjustmentListener(new AdjustmentListener()
         {
             @Override
