@@ -13,11 +13,16 @@ public abstract class BaseFrame
 
     public BaseFrame(String title)
     {
+        this(title, 300, 200);
+    }
+
+    public BaseFrame(String title, int width, int height)
+    {
         frame = new JFrame(title);
 
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setPreferredSize(new Dimension(300, 200));
+        mainPanel.setPreferredSize(new Dimension(width, height));
 
         frame.setContentPane(mainPanel);
         frame.pack();
