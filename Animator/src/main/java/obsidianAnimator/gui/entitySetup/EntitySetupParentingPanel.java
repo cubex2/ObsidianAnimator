@@ -66,7 +66,7 @@ public class EntitySetupParentingPanel extends JPanel
             c.gridx = 0;
             c.gridy = 1 + i;
             c.weightx = 0;
-            parentingTreePanel.add(new JLabel(p.getDisplayName(), SwingConstants.CENTER), c);
+            parentingTreePanel.add(new JLabel(p.getName(), SwingConstants.CENTER), c);
             c.gridx = 1;
             c.weightx = 1;
             parentingTreePanel.add(new JLabel(createChildList(p), SwingConstants.LEFT), c);
@@ -90,7 +90,7 @@ public class EntitySetupParentingPanel extends JPanel
         String childList = "";
 
         for (PartObj child : parent.getChildren())
-            childList += child.getDisplayName() + ", ";
+            childList += child.getName() + ", ";
 
         if (parent.getChildren().size() > 0)
             childList = childList.substring(0, childList.length() - 2);

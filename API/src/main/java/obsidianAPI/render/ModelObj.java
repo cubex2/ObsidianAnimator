@@ -60,8 +60,11 @@ public class ModelObj extends ModelBase
         parts = createPartObjList(model.groupObjects);
         for (PartData partData : definition.getPartData())
         {
-            PartObj part = getPartObjFromName(partData.getPartName());
-            part.setDisplayName(partData.getDisplayName());
+            PartObj part = getPartObjFromName(partData.getInternalName());
+            if (part != null)
+            {
+                part.setDisplayName(partData.getName());
+            }
         }
         parts.sort(Comparator.comparing(part -> definition.getPartOrder().indexOf(part.getName())));
 
@@ -80,15 +83,16 @@ public class ModelObj extends ModelBase
 
     public void updatePartDisplayName(PartObj part, String newDisplayName)
     {
+        Optional<PartData> result = definition.getPartData().stream().filter(p -> p.getName().equals(part.getName())).findAny();
+
         part.setDisplayName(newDisplayName);
 
-        Optional<PartData> result = definition.getPartData().stream().filter(p -> p.getPartName().equals(part.getName())).findAny();
         if (result.isPresent())
         {
-            result.get().setDisplayName(newDisplayName);
+            result.get().setName(newDisplayName);
         } else
         {
-            definition.getPartData().add(new PartData(part.getName(), newDisplayName));
+            definition.getPartData().add(new PartData(part.getInternalName(), part.getName()));
         }
     }
 
@@ -266,18 +270,21 @@ public class ModelObj extends ModelBase
         return new PartObj(this, group);
     }
 
+    @Nullable
     public Part getPartFromName(String name)
     {
         for (Part part : parts)
         {
-            if (part.getName().equals(name) || part.getDisplayName().equals(name))
+            if (part.getInternalName().equals(name) || part.getName().equals(name))
             {
                 return part;
             }
         }
-        throw new RuntimeException("No part found for '" + name + "'");
+
+        return null;
     }
 
+    @Nullable
     public PartObj getPartObjFromName(String name)
     {
         for (Part p : parts)
@@ -285,13 +292,14 @@ public class ModelObj extends ModelBase
             if (p instanceof PartObj)
             {
                 PartObj part = (PartObj) p;
-                if (part.getName().equals(name) || part.getDisplayName().equals(name))
+                if (part.getInternalName().equals(name) || part.getName().equals(name))
                 {
                     return part;
                 }
             }
         }
-        throw new RuntimeException("No part obj found for " + name + ".");
+
+        return null;
     }
 
 }

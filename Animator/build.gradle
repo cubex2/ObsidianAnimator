@@ -40,7 +40,6 @@ minecraft {
 
 dependencies {
    embed "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
    compile project(':API')
 }
 
@@ -65,5 +64,13 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+jar {
+    configurations.embed.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
     }
 }

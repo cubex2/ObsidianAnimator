@@ -271,7 +271,7 @@ public class AnimationSequence
 
     public void loadData(NBTTagCompound compound)
     {
-        entityName = "Slicer27";// compound.getString("EntityName");
+        entityName = compound.getString("EntityName");
         NBTTagList segmentList = compound.getTagList("Animations", 10);
         for (int i = 0; i < segmentList.tagCount(); i++)
         {

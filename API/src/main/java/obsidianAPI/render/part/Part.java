@@ -9,13 +9,13 @@ public abstract class Part
 {
     protected float valueX, valueY, valueZ;
     protected float[] originalValues;
-    private final String name;
+    private final String internalName;
     public final ModelObj modelObj;
 
-    public Part(ModelObj mObj, String name)
+    public Part(ModelObj mObj, String internalName)
     {
         modelObj = mObj;
-        this.name = name.toLowerCase();
+        this.internalName = internalName.toLowerCase();
         valueX = 0.0F;
         valueY = 0.0F;
         valueZ = 0.0F;
@@ -26,14 +26,14 @@ public abstract class Part
     //  			Basics
     //------------------------------------------
 
-    public String getName()
+    public String getInternalName()
     {
-        return name;
+        return internalName;
     }
 
-    public String getDisplayName()
+    public String getName()
     {
-        return getName();
+        return getInternalName();
     }
 
     public void setValues(float[] values)
@@ -101,14 +101,14 @@ public abstract class Part
 
         Part part = (Part) o;
 
-        if (!name.equals(part.name)) return false;
+        if (!internalName.equals(part.internalName)) return false;
         return modelObj.equals(part.modelObj);
     }
 
     @Override
     public int hashCode()
     {
-        int result = name.hashCode();
+        int result = internalName.hashCode();
         result = 31 * result + modelObj.hashCode();
         return result;
     }

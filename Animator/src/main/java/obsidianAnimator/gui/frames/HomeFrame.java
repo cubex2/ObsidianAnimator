@@ -11,8 +11,6 @@ import obsidianAnimator.gui.timeline.TimelineController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class HomeFrame extends BaseFrame
@@ -28,54 +26,19 @@ public class HomeFrame extends BaseFrame
     protected void addComponents()
     {
         JButton newAnimationButton = new JButton("New Animation");
-        newAnimationButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                newAnimationPressed();
-            }
-        });
+        newAnimationButton.addActionListener(e -> newAnimationPressed());
 
         JButton openAnimationButton = new JButton("Open Animation");
-        openAnimationButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                openAnimationPressed();
-            }
-        });
+        openAnimationButton.addActionListener(e -> openAnimationPressed());
 
         JButton modelListButton = new JButton("Model List");
-        modelListButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                modelListPressed();
-            }
-        });
+        modelListButton.addActionListener(e -> modelListPressed());
 
         JButton importEntityButton = new JButton("Import Model");
-        importEntityButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                importModelPressed();
-            }
-        });
+        importEntityButton.addActionListener(e -> importModelPressed());
 
         JButton closeButton = new JButton("Close");
-        closeButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                closePressed();
-            }
-        });
+        closeButton.addActionListener(e -> closePressed());
 
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -97,7 +60,6 @@ public class HomeFrame extends BaseFrame
     {
         frame.dispose();
         new AnimationNewFrame().display();
-        ;
     }
 
     private void openAnimationPressed()

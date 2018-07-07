@@ -29,7 +29,7 @@ public class TimelinePartController extends TimelineControllerSub
         if (getSelectedPart() != null)
         {
             Part part = getSelectedPart();
-            name = part.getDisplayName();
+            name = part.getName();
             x = df.format(part.getValue(0));
             y = df.format(part.getValue(1));
             z = df.format(part.getValue(2));

@@ -17,8 +17,8 @@ class PartGrouping(private val modelDefinition: ModelDefinition)
     {
         modelDefinition.partData.forEach {
             groups.add(it.group)
-            groupToParts.put(it.group, it.partName)
-            partToGroup[it.partName] = it.group
+            groupToParts.put(it.group, it.name)
+            partToGroup[it.name] = it.group
         }
     }
 
@@ -38,8 +38,8 @@ class PartGrouping(private val modelDefinition: ModelDefinition)
         groupToParts.put(group, part.name)
         partToGroup[part.name] = group
 
-        modelDefinition.partData.removeIf { it.partName == part.name }
-        modelDefinition.partData.add(PartData(part.name, part.displayName, group))
+        modelDefinition.partData.removeIf { it.name == part.name }
+        modelDefinition.partData.add(PartData(part.internalName, part.name, group))
     }
 
     fun getGroup(part: Part): String?

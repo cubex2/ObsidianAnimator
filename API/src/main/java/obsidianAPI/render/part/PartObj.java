@@ -34,7 +34,7 @@ public class PartObj extends PartRotation
     {
         super(modelObject, (groupObj.name.contains("_") ? groupObj.name.substring(0, groupObj.name.indexOf("_")) : groupObj.name).toLowerCase());
         this.groupObj = groupObj;
-        this.displayName = getName();
+        this.displayName = getInternalName();
         setDefaultTCsToCurrentTCs();
     }
 
@@ -102,9 +102,9 @@ public class PartObj extends PartRotation
     //------------------------------------------
 
     @Override
-    public String getDisplayName()
+    public String getName()
     {
-        return displayName == null ? getName() : displayName;
+        return displayName == null ? getInternalName() : displayName;
     }
 
     public void setDisplayName(String displayName)

@@ -147,7 +147,7 @@ public class TimelineKeyframePanel extends JPanel
         for (int i = 0; i < numParts; i++)
         {
             final Part part = controller.getTimelineGui().parts.get(i);
-            final JLabel partLabel = new JLabel(part.getDisplayName());
+            final JLabel partLabel = new JLabel(part.getName());
             partLabel.setPreferredSize(new Dimension(70, partLabel.getPreferredSize().height));
             partLabel.addMouseListener(new BlankMouseListener()
             {
@@ -244,9 +244,9 @@ public class TimelineKeyframePanel extends JPanel
     {
         for (int i = 0; i < partLabels.length; i++)
         {
-            if (controller.getTimelineGui().selectedPart != null && partLabels[i].getText().equals(controller.getTimelineGui().selectedPart.getDisplayName()))
+            if (controller.getTimelineGui().selectedPart != null && partLabels[i].getText().equals(controller.getTimelineGui().selectedPart.getName()))
                 partLabels[i].setForeground(Color.red);
-            else if (controller.hoveredPart != null && partLabels[i].getText().equals(controller.hoveredPart.getDisplayName()))
+            else if (controller.hoveredPart != null && partLabels[i].getText().equals(controller.hoveredPart.getName()))
                 partLabels[i].setForeground(Color.blue);
             else
                 partLabels[i].setForeground(Color.black);

@@ -54,7 +54,7 @@ subprojects {
 }
 
 dependencies {
-    embed "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    //embed "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     compile project(':API')
     compile project(':Animator')

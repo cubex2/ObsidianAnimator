@@ -71,7 +71,7 @@ public class EntitySetupController
         } else if (child.getParent() != null)
         {
             Object[] options = {"OK", "Remove parenting"};
-            int n = JOptionPane.showOptionDialog(frame, child.getDisplayName() + " already has a parent.", "Parenting issue",
+            int n = JOptionPane.showOptionDialog(frame, child.getName() + " already has a parent.", "Parenting issue",
                                                  JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             if (n == 1)
             {

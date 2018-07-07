@@ -269,12 +269,12 @@ public class EntitySetupPartPanel extends JPanel
             c.gridx = 0;
             c.gridy = 0;
             c.weightx = 1;
-            add(new JLabel(part.getDisplayName()), c);
+            add(new JLabel(part.getInternalName()), c);
 
             c.gridx = 1;
             c.weightx = 0;
             c.anchor = GridBagConstraints.EAST;
-            JTextField textField = new JTextField(part.getDisplayName());
+            JTextField textField = new JTextField(part.getName());
             textField.getDocument().addDocumentListener(new DisplayNameDocumentListener(part, textField));
             textField.setPreferredSize(new Dimension(200, 22));
             add(textField, c);

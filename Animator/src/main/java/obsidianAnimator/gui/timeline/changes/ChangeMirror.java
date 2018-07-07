@@ -77,7 +77,7 @@ public class ChangeMirror implements AnimationChange
 
     private Part getMirrorPart(Part part, ModelObj_Animator model)
     {
-        String name = part.getDisplayName();
+        String name = part.getName();
         if (!name.endsWith("L") && !name.endsWith("R"))
             return part;
 
@@ -88,7 +88,7 @@ public class ChangeMirror implements AnimationChange
 
         for (Part p : model.getParts())
         {
-            if (p.getName().equals(mirrorName) || p.getDisplayName().equals(mirrorName))
+            if (p.getName().equals(mirrorName))
                 return p;
         }
 
