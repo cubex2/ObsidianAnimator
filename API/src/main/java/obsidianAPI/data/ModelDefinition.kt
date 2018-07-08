@@ -9,7 +9,7 @@ import java.io.ByteArrayInputStream
 
 class ModelDefinition(val modelName: String, val objModelBytes: ByteArray, val rotationPoints: List<PartRotationDefinition>,
                       val partData: MutableList<PartData>, val parenting: List<ParentingDefinition>,
-                      val partOrder: List<String>, val hasProps: Boolean)
+                      val partOrder: List<String>, var hasProps: Boolean)
 {
     val objModel = WavefrontObject(modelName, ByteArrayInputStream(objModelBytes))
 

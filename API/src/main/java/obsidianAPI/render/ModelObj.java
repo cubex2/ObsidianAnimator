@@ -7,6 +7,7 @@ import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import obsidianAPI.animation.PartGrouping;
 import obsidianAPI.data.ModelDefinition;
+import obsidianAPI.data.ParentingDefinition;
 import obsidianAPI.data.PartData;
 import obsidianAPI.data.PartRotationDefinition;
 import obsidianAPI.render.bend.Bend;
@@ -29,7 +30,6 @@ public class ModelObj extends ModelBase
     public WavefrontObject model;
     private List<Part> parts;
     private final ArrayList<Bend> bends = new ArrayList<Bend>();
-    private boolean hasProps = false;
 
     public final PartGrouping grouping;
 
@@ -42,6 +42,7 @@ public class ModelObj extends ModelBase
 
         initParts();
         initRotationPoints(definition);
+        initParenting();
     }
 
     private void initRotationPoints(ModelDefinition definition)
@@ -49,9 +50,12 @@ public class ModelObj extends ModelBase
         for (PartRotationDefinition rotationPoint : definition.getRotationPoints())
         {
             PartObj part = getPartObjFromName(rotationPoint.getPartName());
-            part.setRotationPoint(rotationPoint.getRotationPoint());
-            part.setOriginalValues(rotationPoint.getDefaultValues());
-            part.setValues(rotationPoint.getDefaultValues());
+            if (part != null)
+            {
+                part.setRotationPoint(rotationPoint.getRotationPoint());
+                part.setOriginalValues(rotationPoint.getDefaultValues());
+                part.setValues(rotationPoint.getDefaultValues());
+            }
         }
     }
 
@@ -69,9 +73,22 @@ public class ModelObj extends ModelBase
         parts.sort(Comparator.comparing(part -> definition.getPartOrder().indexOf(part.getName())));
 
         parts.add(new PartEntityPos(this));
-        if (hasProps || entityName.equals("player"))
+        if (definition.getHasProps() || entityName.equals("player"))
         {
             addProps();
+        }
+    }
+
+    private void initParenting()
+    {
+        for (ParentingDefinition definition : definition.getParenting())
+        {
+            PartObj parent = getPartObjFromName(definition.getParent());
+            PartObj child = getPartObjFromName(definition.getChild());
+            if (parent != null && child != null)
+            {
+                setParent(child, parent, definition.getHasBend());
+            }
         }
     }
 
@@ -96,6 +113,32 @@ public class ModelObj extends ModelBase
         }
     }
 
+    public void updateParenting(PartObj child, @Nullable PartObj parent, boolean addBend)
+    {
+        if (parent == null && child.getParent() != null)
+        {
+            definition.getParenting().removeIf(p -> p.getChild().equals(child.getName()) && p.getParent().equals(child.getParent().getName()));
+        }
+
+        if (parent != null)
+        {
+            Optional<ParentingDefinition> result = definition.getParenting().stream()
+                                                             .filter(p -> p.getChild().equals(child.getName()))
+                                                             .findAny();
+
+            if (result.isPresent())
+            {
+                result.get().setParent(parent.getName());
+                result.get().setHasBend(addBend);
+            } else
+            {
+                definition.getParenting().add(new ParentingDefinition(parent.getName(), child.getName(), addBend));
+            }
+        }
+
+        setParent(child, parent, addBend);
+    }
+
     public List<Part> getParts()
     {
         return parts;
@@ -108,19 +151,19 @@ public class ModelObj extends ModelBase
 
     public boolean hasProps()
     {
-        return hasProps;
+        return definition.getHasProps();
     }
 
     public void setHasProps(boolean value)
     {
         if (value)
         {
-            hasProps = true;
+            definition.setHasProps(true);
 
             addProps();
         } else
         {
-            hasProps = false;
+            definition.setHasProps(false);
         }
     }
 
@@ -157,7 +200,7 @@ public class ModelObj extends ModelBase
     //						Parenting
     //----------------------------------------------------------------
 
-    public void setParent(PartObj child, @Nullable PartObj parent, boolean addBend)
+    private void setParent(PartObj child, @Nullable PartObj parent, boolean addBend)
     {
         if (addBend)
         {
@@ -176,6 +219,9 @@ public class ModelObj extends ModelBase
                 bends.add(b);
                 child.setBend(b);
             }
+        } else if (child.hasBend())
+        {
+            child.removeBend();
         }
 
         if (child.hasParent())

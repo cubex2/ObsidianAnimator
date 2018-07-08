@@ -3,7 +3,7 @@ package obsidianAPI.data
 import net.minecraft.nbt.NBTTagCompound
 import obsidianAPI.io.NBTSerializer
 
-class ParentingDefinition(val parent: String, val child: String, val hasBend: Boolean)
+class ParentingDefinition(var parent: String, val child: String, var hasBend: Boolean)
 {
     companion object : NBTSerializer<ParentingDefinition>
     {

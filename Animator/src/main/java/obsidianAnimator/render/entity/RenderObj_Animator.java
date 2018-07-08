@@ -147,6 +147,9 @@ public class RenderObj_Animator extends RenderLiving
      */
     public void transformToItemCentre(ItemStack itemstack, PartObj arm, Part propTrans)
     {
+        if (arm == null)
+            return;
+
         //Post render for lower right arm.
         arm.postRenderAll();
 

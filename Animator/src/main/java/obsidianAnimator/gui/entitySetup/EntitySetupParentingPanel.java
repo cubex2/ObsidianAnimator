@@ -1,11 +1,10 @@
 package obsidianAnimator.gui.entitySetup;
 
 import obsidianAPI.render.part.PartObj;
+import obsidianAnimator.render.entity.ModelObj_Animator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class EntitySetupParentingPanel extends JPanel
@@ -24,18 +23,14 @@ public class EntitySetupParentingPanel extends JPanel
         addScrollPane();
 
         JButton clearButton = new JButton("Clear All");
-        clearButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
+        clearButton.addActionListener(e -> {
+            ModelObj_Animator model = controller.getEntityModel();
+            for (PartObj partObj : model.getPartObjs())
             {
-                for (PartObj partObj : controller.getEntityModel().getPartObjs())
-                {
-                    controller.getEntityModel().setParent(partObj, null, false);
-                    partObj.getChildren().clear();
-                }
-                refreshScrollPane();
+                model.updateParenting(partObj, null, false);
             }
+
+            refreshScrollPane();
         });
 
         add(clearButton, BorderLayout.SOUTH);
