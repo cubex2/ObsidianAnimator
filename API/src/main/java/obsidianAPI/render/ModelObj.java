@@ -321,7 +321,8 @@ public class ModelObj extends ModelBase
     {
         for (Part part : parts)
         {
-            if (part.getInternalName().equals(name) || part.getName().equals(name))
+            if (part.getInternalName().equalsIgnoreCase(name)
+                || part.getName().equalsIgnoreCase(name))
             {
                 return part;
             }
@@ -338,7 +339,8 @@ public class ModelObj extends ModelBase
             if (p instanceof PartObj)
             {
                 PartObj part = (PartObj) p;
-                if (part.getInternalName().equals(name) || part.getName().equals(name))
+                if (part.getInternalName().equalsIgnoreCase(name)
+                    || part.getName().equalsIgnoreCase(name))
                 {
                     return part;
                 }
