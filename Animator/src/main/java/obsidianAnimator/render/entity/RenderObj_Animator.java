@@ -168,7 +168,7 @@ public class RenderObj_Animator extends RenderLiving
                 GL11.glTranslatef(-0.125f, -0.17F, 0.0f);
             else if (itemstack.getItem().isFull3D())
                 GL11.glTranslatef(0.00f, -0.22F, 0.04f);
-            else if (arm.getName().equals("armLwL")) // TODO: let the item decide this
+            else if (arm.getName().equalsIgnoreCase("armLwL")) // TODO: let the item decide this
                 GL11.glTranslatef(0.138f, -0.25f, 0.0f);
             else
                 GL11.glTranslatef(0, -0.30F, 0.2f);
