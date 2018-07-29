@@ -148,6 +148,7 @@ public class TimelineKeyframePanel extends JPanel
         {
             final Part part = controller.getTimelineGui().parts.get(i);
             final JLabel partLabel = new JLabel(part.getName());
+            partLabel.setToolTipText(part.getName());
             partLabel.setPreferredSize(new Dimension(70, partLabel.getPreferredSize().height));
             partLabel.addMouseListener(new BlankMouseListener()
             {

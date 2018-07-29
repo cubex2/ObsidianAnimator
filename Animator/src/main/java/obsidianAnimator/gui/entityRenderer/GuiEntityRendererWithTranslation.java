@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
 import obsidianAPI.render.part.*;
 import obsidianAnimator.data.ModelHandler;
+import obsidianAnimator.gui.timeline.TimelineController;
 import obsidianAnimator.render.MathHelper;
 import obsidianAnimator.render.RayTrace;
 import org.lwjgl.opengl.GL11;
@@ -23,9 +24,9 @@ public class GuiEntityRendererWithTranslation extends GuiEntityRendererWithRotat
     private Vec3 initialTranslationGuidePoint;
     private double prevTranslationDelta = 0.0F;
 
-    public GuiEntityRendererWithTranslation(String entityName)
+    public GuiEntityRendererWithTranslation(TimelineController controller)
     {
-        super(entityName);
+        super(controller);
     }
 
     /* ---------------------------------------------------- *
@@ -76,12 +77,15 @@ public class GuiEntityRendererWithTranslation extends GuiEntityRendererWithRotat
             } else if (selectedPart instanceof PartPropTranslation || selectedPart instanceof PartPropScale)
             {
                 ItemStack itemstack = entityToRender.getHeldItem();
-                if (selectedPart.getName().equals("prop_trans") || selectedPart.getName().equals("prop_scale"))
-                {
-                    ModelHandler.modelRenderer.transformToItemCentreRight(itemstack);
-                } else
+                if (selectedPart.getName().equals("prop_trans_l") || selectedPart.getName().equals("prop_scale_l"))
                 {
                     ModelHandler.modelRenderer.transformToItemCentreLeft(ModelHandler.modelRenderer.getLeftItem());
+                } else if (selectedPart.getName().startsWith("shop_prop"))
+                {
+                    ModelHandler.modelRenderer.transformToItemCentreShop(ModelHandler.modelRenderer.getShopItem(), selectedPart);
+                } else
+                {
+                    ModelHandler.modelRenderer.transformToItemCentreRight(itemstack);
                 }
             }
 

@@ -11,7 +11,7 @@ public class EntitySetupGui extends GuiEntityRenderer
 
     public EntitySetupGui(String entityName, EntitySetupController controller)
     {
-        super(entityName);
+        super(null, entityName);
         this.controller = controller;
     }
 

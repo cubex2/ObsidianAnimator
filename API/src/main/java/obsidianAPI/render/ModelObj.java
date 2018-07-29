@@ -76,6 +76,7 @@ public class ModelObj extends ModelBase
         if (definition.getHasProps() || entityName.equals("player"))
         {
             addProps();
+            addShopProps();
         }
     }
 
@@ -161,6 +162,7 @@ public class ModelObj extends ModelBase
             definition.setHasProps(true);
 
             addProps();
+            addShopProps();
         } else
         {
             definition.setHasProps(false);
@@ -179,6 +181,19 @@ public class ModelObj extends ModelBase
         parts.add(new PartPropRotation(this, "prop_rot_l"));
         parts.add(new PartPropTranslation(this, "prop_trans_l"));
         parts.add(new PartPropScale(this, "prop_scale_l"));
+    }
+
+    private void addShopProps()
+    {
+        if (parts.stream().anyMatch(p -> p.getInternalName().equals("shop_prop_rot_1")))
+            return;
+
+        for (int i = 1; i <= 5; i++)
+        {
+            parts.add(new PartPropRotation(this, "shop_prop_rot_" + i));
+            parts.add(new PartPropTranslation(this, "shop_prop_trans_" + i));
+            parts.add(new PartPropScale(this, "shop_prop_scale_" + i));
+        }
     }
 
     //----------------------------------------------------------------

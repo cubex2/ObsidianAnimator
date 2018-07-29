@@ -9,6 +9,7 @@ import obsidianAPI.render.part.PartObj;
 import obsidianAPI.render.part.PartPropRotation;
 import obsidianAPI.render.part.PartRotation;
 import obsidianAnimator.data.ModelHandler;
+import obsidianAnimator.gui.timeline.TimelineController;
 import obsidianAnimator.render.MathHelper;
 import obsidianAnimator.render.RayTrace;
 import org.lwjgl.opengl.GL11;
@@ -32,9 +33,9 @@ public class GuiEntityRendererWithRotation extends GuiEntityRenderer
     //Used for storing the values of the part before rotation
     private float[] preRotationPartValues = new float[3];
 
-    public GuiEntityRendererWithRotation(String entityName)
+    public GuiEntityRendererWithRotation(TimelineController controller)
     {
-        super(entityName);
+        super(controller.currentAnimation, controller.currentAnimation.getEntityName());
     }
 
     /* ---------------------------------------------------- *
@@ -274,12 +275,15 @@ public class GuiEntityRendererWithRotation extends GuiEntityRenderer
         } else if (selectedPart instanceof PartPropRotation) //Prop rotation
         {
             ItemStack itemstack = entityToRender.getHeldItem();
-            if (selectedPart.getName().equals("prop_rot"))
-            {
-                ModelHandler.modelRenderer.transformToItemCentreAndRotateRight(itemstack);
-            } else
+            if (selectedPart.getName().equals("prop_rot_l"))
             {
                 ModelHandler.modelRenderer.transformToItemCentreAndRotateLeft(ModelHandler.modelRenderer.getLeftItem());
+            } else if (selectedPart.getName().startsWith("shop_prop_rot"))
+            {
+                ModelHandler.modelRenderer.transformToItemCentreAndRotateShop(ModelHandler.modelRenderer.getShopItem(), selectedPart);
+            } else
+            {
+                ModelHandler.modelRenderer.transformToItemCentreAndRotateRight(itemstack);
             }
         }
     }

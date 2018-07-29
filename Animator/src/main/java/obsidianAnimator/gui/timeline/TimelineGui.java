@@ -15,7 +15,7 @@ public class TimelineGui extends GuiEntityRendererWithTranslation implements Ext
 
     public TimelineGui(TimelineController controller)
     {
-        super(controller.currentAnimation.getEntityName());
+        super(controller);
         this.controller = controller;
     }
 

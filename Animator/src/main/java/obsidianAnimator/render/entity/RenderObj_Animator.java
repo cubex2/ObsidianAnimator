@@ -5,9 +5,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -26,6 +30,7 @@ public class RenderObj_Animator extends RenderLiving
 {
     private ModelObj_Animator modelObj;
     private ItemStack leftItem;
+    private ItemStack shopItem;
 
     public RenderObj_Animator()
     {
@@ -52,6 +57,16 @@ public class RenderObj_Animator extends RenderLiving
     public ItemStack getLeftItem()
     {
         return leftItem;
+    }
+
+    public ItemStack getShopItem()
+    {
+        return shopItem;
+    }
+
+    public void setShopItem(ItemStack shopItem)
+    {
+        this.shopItem = shopItem;
     }
 
     @Override
@@ -99,6 +114,40 @@ public class RenderObj_Animator extends RenderLiving
             GL11.glPopMatrix();
         }
 
+        if (shopItem != null)
+        {
+            for (int i = 1; i <= 3; i++)
+            {
+                ItemStack item = new ItemStack(i == 1 ? Items.apple : (i == 2 ? Item.getItemFromBlock(Blocks.dirt) : Items.stone_sword));
+                GL11.glPushMatrix();
+
+                GL11.glRotatef(ModelObj.initRotFix, 1.0F, 0.0F, 0.0F);
+                GL11.glTranslatef(0.0F, ModelObj.offsetFixY, 0.0F);
+
+                postRenderItem(item, modelObj.getPartObjFromName("armLwR"),
+                               modelObj.getPartFromName("shop_prop_trans_" + i),
+                               (PartRotation) modelObj.getPartFromName("shop_prop_rot_" + i),
+                               modelObj.getPartFromName("shop_prop_scale_" + i));
+
+
+                //renderItem(entity, shopItem);
+
+                EntityItem entityitem = new EntityItem(entity.worldObj, 0.0, 0.0, 0.0, item);
+                entityitem.getEntityItem().stackSize = 1;
+                entityitem.hoverStart = 0.0f;
+
+                //GL11.glScalef(2f,2f,2f);
+                //GL11.glPushMatrix();
+                //GL11.glRotatef(90, 1f, 0f, 0f);
+                //RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0, 0.0, 0.0, 0.0f, 0.0f);
+                GL11.glScalef(0.25f,0.25f,0.25f);
+                renderManager.itemRenderer.renderItem(entity,item,0, ItemRenderType.ENTITY);
+                //GL11.glPopMatrix();
+
+                GL11.glPopMatrix();
+            }
+        }
+
     }
 
     private void renderItem(EntityLivingBase entity, ItemStack itemstack1)
@@ -117,7 +166,7 @@ public class RenderObj_Animator extends RenderLiving
                 f3 = (float) (i >> 8 & 255) / 255.0F;
                 f4 = (float) (i & 255) / 255.0F;
                 GL11.glColor4f(f12, f3, f4, 1.0F);
-                this.renderManager.itemRenderer.renderItem(entity, itemstack1, k);
+                this.renderManager.itemRenderer.renderItem(entity, itemstack1, k, ItemRenderType.ENTITY);
             }
         } else
         {
@@ -126,7 +175,7 @@ public class RenderObj_Animator extends RenderLiving
             f12 = (float) (k >> 8 & 255) / 255.0F;
             f3 = (float) (k & 255) / 255.0F;
             GL11.glColor4f(f11, f12, f3, 1.0F);
-            this.renderManager.itemRenderer.renderItem(entity, itemstack1, 0);
+            this.renderManager.itemRenderer.renderItem(entity, itemstack1, 0, ItemRenderType.ENTITY);
         }
     }
 
@@ -139,6 +188,14 @@ public class RenderObj_Animator extends RenderLiving
     public void transformToItemCentreLeft(ItemStack itemstack)
     {
         transformToItemCentre(itemstack, modelObj.getPartObjFromName("armLwL"), modelObj.getPartFromName("prop_trans_l"));
+    }
+
+    public void transformToItemCentreShop(ItemStack itemstack, Part part)
+    {
+        String name = part.getName();
+        transformToItemCentre(itemstack,
+                              modelObj.getPartObjFromName("armLwR"),
+                              modelObj.getPartFromName("shop_prop_trans_" + name.substring(name.lastIndexOf('_') + 1)));
     }
 
     /**
@@ -159,6 +216,12 @@ public class RenderObj_Animator extends RenderLiving
 
         if (itemstack != null)
         {
+            if (propTrans.getName().contains("shop_prop"))
+            {
+                //GL11.glTranslatef(0, -0.30F, 0.2f);
+                return;
+            }
+
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, ItemRenderType.EQUIPPED);
             boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(ItemRenderType.EQUIPPED, itemstack, ItemRendererHelper.BLOCK_3D));
 
@@ -189,6 +252,17 @@ public class RenderObj_Animator extends RenderLiving
                                        modelObj.getPartObjFromName("armLwL"),
                                        modelObj.getPartFromName("prop_trans_l"),
                                        (PartRotation) modelObj.getPartFromName("prop_rot_l"));
+    }
+
+    public void transformToItemCentreAndRotateShop(ItemStack itemstack, Part part)
+    {
+        String name = part.getName();
+        String number = name.substring(name.lastIndexOf('_') + 1);
+
+        transformToItemCentreAndRotate(itemstack,
+                                       modelObj.getPartObjFromName("armLwR"),
+                                       modelObj.getPartFromName("shop_prop_trans_" + number),
+                                       (PartRotation) modelObj.getPartFromName("shop_prop_rot_" + number));
     }
 
     /**
@@ -225,6 +299,25 @@ public class RenderObj_Animator extends RenderLiving
 
         if (itemstack != null)
         {
+            if (propTrans.getName().contains("shop_prop"))
+            {
+                if (!(itemstack.getItem() instanceof ItemBlock))
+                {
+                    f2 = 0.375F;
+
+                    //Prop scale
+                    GL11.glScalef(1.0f + scaleVals[0], 1.0f + scaleVals[1], 1.0f + scaleVals[2]);
+
+                    //GL11.glTranslatef(-0.2f, 0.02f, -0.1f);
+                    GL11.glTranslatef(-0.1f, 0f, -0.1f);
+                    //GL11.glScalef(f2, f2, f2);
+                    GL11.glRotatef(88, 1, 0, 0);
+                    GL11.glRotatef(130, 0, 1, 0);
+                    GL11.glRotatef(26, 1, 0, 1);
+                }
+
+                return;
+            }
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, ItemRenderType.EQUIPPED);
             boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(ItemRenderType.EQUIPPED, itemstack, ItemRendererHelper.BLOCK_3D));
 

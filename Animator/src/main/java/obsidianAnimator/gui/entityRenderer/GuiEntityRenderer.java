@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
+import obsidianAPI.animation.AnimationSequence;
 import obsidianAPI.render.part.Part;
 import obsidianAPI.render.part.PartEntityPos;
 import obsidianAPI.render.part.PartObj;
@@ -21,6 +22,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +54,7 @@ public class GuiEntityRenderer extends GuiBlack
 
     public int gridMinX = -1, gridMaxX = 1, gridMinZ = -1, gridMaxZ = 1;
 
-    public GuiEntityRenderer(String entityName)
+    public GuiEntityRenderer(@Nullable AnimationSequence animation, String entityName)
     {
         super();
 
@@ -64,14 +66,26 @@ public class GuiEntityRenderer extends GuiBlack
         //Setup parts list.
         for (Part part : entityModel.getParts())
         {
-            parts.add(part);
-            part.setToOriginalValues();
+            if (shouldShowPart(animation, part))
+            {
+                parts.add(part);
+                part.setToOriginalValues();
+            }
         }
 
         selectedPart = parts.get(0);
         setupViews();
 
         ModelHandler.updateRenderer(entityName);
+    }
+
+    private boolean shouldShowPart(@Nullable AnimationSequence animation, Part part)
+    {
+        if (animation == null)
+            return true;
+
+        return !part.getInternalName().contains("shop_prop")
+               || animation.getName().toLowerCase().contains("shop");
     }
 
     /* ---------------------------------------------------- *

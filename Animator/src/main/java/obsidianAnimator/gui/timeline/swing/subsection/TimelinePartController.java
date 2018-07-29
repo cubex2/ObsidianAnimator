@@ -4,6 +4,7 @@ import obsidianAPI.render.part.Part;
 import obsidianAnimator.gui.timeline.TimelineController;
 import obsidianAnimator.gui.timeline.swing.TimelineControllerSub;
 
+import java.awt.*;
 import java.text.DecimalFormat;
 
 public class TimelinePartController extends TimelineControllerSub
@@ -34,7 +35,10 @@ public class TimelinePartController extends TimelineControllerSub
             y = df.format(part.getValue(1));
             z = df.format(part.getValue(2));
         }
+        //if (name.length() > 10)
+            //name = name.substring(0, 10);
         panel.partName.setText(name);
+        //panel.partName.setPreferredSize(new Dimension(70, panel.partName.getPreferredSize().height));
         panel.partX.setText("X: " + x);
         panel.partY.setText("Y: " + y);
         panel.partZ.setText("Z: " + z);

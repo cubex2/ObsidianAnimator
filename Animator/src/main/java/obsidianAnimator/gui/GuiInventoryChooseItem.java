@@ -13,17 +13,17 @@ import obsidianAnimator.render.entity.EntityObj;
 public class GuiInventoryChooseItem extends GuiInventory
 {
 
-    private final boolean leftHand;
+    private final Type type;
     private TimelineItemController controller;
     private EntityObj entity;
 
-    public GuiInventoryChooseItem(boolean leftHand, TimelineItemController controller, EntityObj entity)
+    public GuiInventoryChooseItem(Type type, TimelineItemController controller, EntityObj entity)
     {
         super(Minecraft.getMinecraft().thePlayer);
         this.allowUserInput = true;
         this.controller = controller;
         this.entity = entity;
-        this.leftHand = leftHand;
+        this.type = type;
     }
 
     /**
@@ -45,12 +45,17 @@ public class GuiInventoryChooseItem extends GuiInventory
 
     public void setItemStack(ItemStack itemStack)
     {
-        if (leftHand)
+        if (type == Type.LEFT)
             ModelHandler.modelRenderer.setLeftItem(itemStack);
-        else
+        else if (type == Type.RIGHT)
             this.entity.setCurrentItem(itemStack);
+        else if (type == Type.SHOP)
+            ModelHandler.modelRenderer.setShopItem(itemStack);
         controller.display();
     }
 
-
+    public enum Type
+    {
+        LEFT, RIGHT, SHOP
+    }
 }

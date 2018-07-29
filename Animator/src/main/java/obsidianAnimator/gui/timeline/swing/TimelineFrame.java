@@ -24,7 +24,7 @@ public class TimelineFrame extends JFrame
 
     public TimelineFrame(TimelineController controller)
     {
-        super("Timeline");
+        super("Timeline (" + controller.currentAnimation.getName() + ")");
         this.controller = controller;
         this.actionsPanel = new ActionPointsPanel(controller);
 

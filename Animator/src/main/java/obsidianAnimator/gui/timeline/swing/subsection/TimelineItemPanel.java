@@ -6,14 +6,15 @@ import obsidianAnimator.gui.GuiInventoryChooseItem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class TimelineItemPanel extends JPanel
 {
 
+    private final TimelineItemController controller;
+
     public TimelineItemPanel(TimelineItemController controller)
     {
+        this.controller = controller;
         setLayout(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
@@ -23,57 +24,40 @@ public class TimelineItemPanel extends JPanel
         c.ipadx = 10;
         c.fill = GridBagConstraints.BOTH;
 
-        JButton itemButton = new JButton("Choose Right");
-        itemButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                controller.getTimelineFrame().setVisible(false);
-                Minecraft.getMinecraft().displayGuiScreen(new GuiInventoryChooseItem(false, controller, controller.getEntityToRender()));
-            }
-        });
-        add(itemButton, c);
+        addButtons(c, 0, "Right", GuiInventoryChooseItem.Type.RIGHT,
+                   () -> controller.getEntityToRender().setCurrentItem(null));
 
-        c.gridx = 1;
-        JButton emptyItemButton = new JButton("Empty");
-        emptyItemButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                controller.getEntityToRender().setCurrentItem(null);
-            }
-        });
-        add(emptyItemButton, c);
+        addButtons(c, 1, "Left", GuiInventoryChooseItem.Type.LEFT,
+                   () -> ModelHandler.modelRenderer.setLeftItem(null));
 
-        c.gridy = 1;
+        if (controller.getCurrentAnimation().getName().toLowerCase().contains("shop"))
+        {
+            addButtons(c, 2, "Shop", GuiInventoryChooseItem.Type.SHOP,
+                       () -> ModelHandler.modelRenderer.setShopItem(null));
+        }
+
+        setBorder(BorderFactory.createTitledBorder("Item"));
+    }
+
+    private void addButtons(GridBagConstraints c, int y, String text, GuiInventoryChooseItem.Type type,
+                            Runnable emptyClicked)
+    {
+        JButton itemButton;
+        JButton emptyItemButton;
+        c.gridy = y;
         c.gridx = 0;
-        itemButton = new JButton("Choose Left");
-        itemButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                controller.getTimelineFrame().setVisible(false);
-                Minecraft.getMinecraft().displayGuiScreen(new GuiInventoryChooseItem(true, controller, controller.getEntityToRender()));
-            }
+        itemButton = new JButton("Choose " + text);
+        itemButton.addActionListener(e -> {
+            controller.getTimelineFrame().setVisible(false);
+            Minecraft.getMinecraft().displayGuiScreen(new GuiInventoryChooseItem(type, controller, controller.getEntityToRender()));
         });
         add(itemButton, c);
 
-        c.gridy = 1;
+        c.gridy = y;
         c.gridx = 1;
         emptyItemButton = new JButton("Empty");
-        emptyItemButton.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                ModelHandler.modelRenderer.setLeftItem(null);
-            }
-        });
+        emptyItemButton.addActionListener(e -> emptyClicked.run());
         add(emptyItemButton, c);
-        setBorder(BorderFactory.createTitledBorder("Item"));
     }
 
 }
