@@ -5,13 +5,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -20,8 +17,8 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import net.minecraftforge.client.MinecraftForgeClient;
 import obsidianAPI.render.ModelObj;
+import obsidianAPI.render.part.IPart;
 import obsidianAPI.render.part.Part;
-import obsidianAPI.render.part.PartObj;
 import obsidianAPI.render.part.PartRotation;
 import org.lwjgl.opengl.GL11;
 
@@ -116,15 +113,17 @@ public class RenderObj_Animator extends RenderLiving
 
         if (shopItem != null)
         {
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 5; i++)
             {
-                ItemStack item = new ItemStack(i == 1 ? Items.apple : (i == 2 ? Item.getItemFromBlock(Blocks.dirt) : Items.stone_sword));
+                // ItemStack item = new ItemStack(i == 1 ? Items.apple : (i == 2 ? Item.getItemFromBlock(Blocks.dirt) : Items.stone_sword));
                 GL11.glPushMatrix();
 
                 GL11.glRotatef(ModelObj.initRotFix, 1.0F, 0.0F, 0.0F);
                 GL11.glTranslatef(0.0F, ModelObj.offsetFixY, 0.0F);
 
-                postRenderItem(item, modelObj.getPartObjFromName("armLwR"),
+                IPart parent = modelObj.getPartObjFromName("armLwR");
+
+                postRenderItem(shopItem, parent,
                                modelObj.getPartFromName("shop_prop_trans_" + i),
                                (PartRotation) modelObj.getPartFromName("shop_prop_rot_" + i),
                                modelObj.getPartFromName("shop_prop_scale_" + i));
@@ -132,7 +131,7 @@ public class RenderObj_Animator extends RenderLiving
 
                 //renderItem(entity, shopItem);
 
-                EntityItem entityitem = new EntityItem(entity.worldObj, 0.0, 0.0, 0.0, item);
+                EntityItem entityitem = new EntityItem(entity.worldObj, 0.0, 0.0, 0.0, shopItem);
                 entityitem.getEntityItem().stackSize = 1;
                 entityitem.hoverStart = 0.0f;
 
@@ -140,8 +139,8 @@ public class RenderObj_Animator extends RenderLiving
                 //GL11.glPushMatrix();
                 //GL11.glRotatef(90, 1f, 0f, 0f);
                 //RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0, 0.0, 0.0, 0.0f, 0.0f);
-                GL11.glScalef(0.25f,0.25f,0.25f);
-                renderManager.itemRenderer.renderItem(entity,item,0, ItemRenderType.ENTITY);
+                GL11.glScalef(0.25f, 0.25f, 0.25f);
+                renderManager.itemRenderer.renderItem(entity, shopItem, 0, ItemRenderType.ENTITY);
                 //GL11.glPopMatrix();
 
                 GL11.glPopMatrix();
@@ -193,22 +192,26 @@ public class RenderObj_Animator extends RenderLiving
     public void transformToItemCentreShop(ItemStack itemstack, Part part)
     {
         String name = part.getName();
+        int i = Integer.parseInt(name.substring(name.lastIndexOf('_') + 1));
+
+        IPart parent = modelObj.getPartObjFromName("armLwR");
+
         transformToItemCentre(itemstack,
-                              modelObj.getPartObjFromName("armLwR"),
-                              modelObj.getPartFromName("shop_prop_trans_" + name.substring(name.lastIndexOf('_') + 1)));
+                              parent,
+                              modelObj.getPartFromName("shop_prop_trans_" + i));
     }
 
     /**
      * Transform an existing GL11 matrix to the held item location.
      * Takes prop translation into account.
      */
-    public void transformToItemCentre(ItemStack itemstack, PartObj arm, Part propTrans)
+    public void transformToItemCentre(ItemStack itemstack, IPart parent, Part propTrans)
     {
-        if (arm == null)
+        if (parent == null)
             return;
 
         //Post render for lower right arm.
-        arm.postRenderAll();
+        parent.postRenderAll();
 
         //Prop translation
         float[] propTranslation = propTrans.getValues();
@@ -231,7 +234,7 @@ public class RenderObj_Animator extends RenderLiving
                 GL11.glTranslatef(-0.125f, -0.17F, 0.0f);
             else if (itemstack.getItem().isFull3D())
                 GL11.glTranslatef(0.00f, -0.22F, 0.04f);
-            else if (arm.getName().equalsIgnoreCase("armLwL")) // TODO: let the item decide this
+            else if (parent.getName().equalsIgnoreCase("armLwL")) // TODO: let the item decide this
                 GL11.glTranslatef(0.138f, -0.25f, 0.0f);
             else
                 GL11.glTranslatef(0, -0.30F, 0.2f);
@@ -257,19 +260,21 @@ public class RenderObj_Animator extends RenderLiving
     public void transformToItemCentreAndRotateShop(ItemStack itemstack, Part part)
     {
         String name = part.getName();
-        String number = name.substring(name.lastIndexOf('_') + 1);
+        int i = Integer.parseInt(name.substring(name.lastIndexOf('_') + 1));
+
+        IPart parent = modelObj.getPartObjFromName("armLwR");
 
         transformToItemCentreAndRotate(itemstack,
-                                       modelObj.getPartObjFromName("armLwR"),
-                                       modelObj.getPartFromName("shop_prop_trans_" + number),
-                                       (PartRotation) modelObj.getPartFromName("shop_prop_rot_" + number));
+                                       parent,
+                                       modelObj.getPartFromName("shop_prop_trans_" + i),
+                                       (PartRotation) modelObj.getPartFromName("shop_prop_rot_" + i));
     }
 
     /**
      * Transform an existing GL11 matrix to the held item location.
      * Takes prop rotation and translation into account.
      */
-    public void transformToItemCentreAndRotate(ItemStack itemstack, PartObj arm, Part propTrans, PartRotation propRot)
+    public void transformToItemCentreAndRotate(ItemStack itemstack, IPart parent, Part propTrans, PartRotation propRot)
     {
 
         //Prop rotation. Need to swap signs so rotation is the correct way.
@@ -277,7 +282,7 @@ public class RenderObj_Animator extends RenderLiving
         propRot.setValue(-propRot.getValue(1), 1);
         propRot.setValue(-propRot.getValue(2), 2);
 
-        transformToItemCentre(itemstack, arm, propTrans);
+        transformToItemCentre(itemstack, parent, propTrans);
         propRot.rotate();
 
         //Need to swap back to original value.
@@ -289,11 +294,11 @@ public class RenderObj_Animator extends RenderLiving
      * Transform an existing GL11 matrix for the player item.
      * Transforms to item centre, then does further transforms based on item (default MC transforms)
      */
-    public void postRenderItem(ItemStack itemstack, PartObj arm, Part propTrans, PartRotation propRot, Part propScale)
+    public void postRenderItem(ItemStack itemstack, IPart parent, Part propTrans, PartRotation propRot, Part propScale)
     {
         float f2;
 
-        transformToItemCentreAndRotate(itemstack, arm, propTrans, propRot);
+        transformToItemCentreAndRotate(itemstack, parent, propTrans, propRot);
 
         float[] scaleVals = propScale.getValues();
 
@@ -301,23 +306,23 @@ public class RenderObj_Animator extends RenderLiving
         {
             if (propTrans.getName().contains("shop_prop"))
             {
-                if (!(itemstack.getItem() instanceof ItemBlock))
+                //Prop scale
+                GL11.glScalef(1.0f + scaleVals[0], 1.0f + scaleVals[1], 1.0f + scaleVals[2]);
+
+                if (!(itemstack.getItem() instanceof ItemBlock && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemstack.getItem()).getRenderType())))
                 {
-                    f2 = 0.375F;
-
-                    //Prop scale
-                    GL11.glScalef(1.0f + scaleVals[0], 1.0f + scaleVals[1], 1.0f + scaleVals[2]);
-
-                    //GL11.glTranslatef(-0.2f, 0.02f, -0.1f);
                     GL11.glTranslatef(-0.1f, 0f, -0.1f);
-                    //GL11.glScalef(f2, f2, f2);
                     GL11.glRotatef(88, 1, 0, 0);
                     GL11.glRotatef(130, 0, 1, 0);
                     GL11.glRotatef(26, 1, 0, 1);
+                } else
+                {
+                    GL11.glRotatef(90f, 1, 0, 0);
                 }
 
                 return;
             }
+            
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, ItemRenderType.EQUIPPED);
             boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(ItemRenderType.EQUIPPED, itemstack, ItemRendererHelper.BLOCK_3D));
 

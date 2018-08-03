@@ -8,10 +8,10 @@ import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.client.model.obj.TextureCoordinate;
 import obsidianAPI.render.ModelObj;
 import obsidianAPI.render.bend.Bend;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,11 +57,6 @@ public class PartObj extends PartRotation
         return parent;
     }
 
-    public boolean hasParent()
-    {
-        return parent != null;
-    }
-
     public void addChild(PartObj child)
     {
         children.add(child);
@@ -102,6 +97,7 @@ public class PartObj extends PartRotation
     //------------------------------------------
 
     @Override
+    @Nonnull
     public String getName()
     {
         return displayName == null ? getInternalName() : displayName;
@@ -117,6 +113,7 @@ public class PartObj extends PartRotation
         rotationPoint = rot;
     }
 
+    @Override
     public float getRotationPoint(int i)
     {
         return rotationPoint[i];
@@ -189,58 +186,11 @@ public class PartObj extends PartRotation
         GL11.glPopMatrix();
     }
 
-    /**
-     * Complete post render - parent post render, translation for this part, then rotation for this part.
-     */
-    public void postRenderAll()
+    @Nullable
+    @Override
+    public IPart getParentPart()
     {
-        postRenderAllTrans();
-        rotate();
-    }
-
-    /**
-     * Complete post render except rotation of this part.
-     */
-    public void postRenderAllTrans()
-    {
-        float[] totalTranslation = postRenderParent();
-        GL11.glTranslated(-getRotationPoint(0) - totalTranslation[0], -getRotationPoint(1) - totalTranslation[1], -getRotationPoint(2) - totalTranslation[2]);
-    }
-
-    /**
-     * Adjust GL11 Matrix for all parents of this part.
-     */
-    //TODO could this be done recursively?
-    public float[] postRenderParent()
-    {
-        //Generate a list of parents: {topParent, topParent - 1,..., parent}
-        List<PartObj> parts = new ArrayList<PartObj>();
-        PartObj child = this;
-        PartObj parent;
-        while ((parent = child.getParent()) != null)
-        {
-            parts.add(0, parent);
-            child = parent;
-        }
-
-        float[] totalTranslation = new float[] {0, 0, 0};
-        for (PartObj p : parts)
-        {
-            GL11.glTranslated(-p.getRotationPoint(0) - totalTranslation[0], -p.getRotationPoint(1) - totalTranslation[1], -p.getRotationPoint(2) - totalTranslation[2]);
-            for (int i = 0; i < 3; i++)
-                totalTranslation[i] = -p.getRotationPoint(i);
-
-            p.rotate();
-
-        }
-        return totalTranslation;
-    }
-
-    public void move()
-    {
-        GL11.glTranslatef(-rotationPoint[0], -rotationPoint[1], -rotationPoint[2]);
-        rotate();
-        GL11.glTranslatef(rotationPoint[0], rotationPoint[1], rotationPoint[2]);
+        return parent;
     }
 
     public float[] createRotationMatrixFromAngles()

@@ -6,13 +6,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.obj.Face;
 import net.minecraftforge.client.model.obj.GroupObject;
 import net.minecraftforge.client.model.obj.TextureCoordinate;
+import obsidianAPI.render.part.IPart;
 import obsidianAPI.render.part.PartObj;
 import obsidianAnimator.render.MathHelper;
 import obsidianAnimator.render.RayTrace;
 import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * One partObj for each 'part' of the model.
@@ -40,18 +38,8 @@ public class PartObj_Animator extends PartObj
     {
         GL11.glPushMatrix();
 
-        //Get all parents that need compensating for.
-        List<PartObj> parents = new ArrayList<PartObj>();
-        PartObj p = this;
-        parents.add(p);
-        while (p.hasParent())
-        {
-            p = p.getParent();
-            parents.add(0, p);
-        }
-
         //Compensate for all parents. TODO remove compensate Part rotation method
-        for (PartObj q : parents)
+        for (IPart q : createPartHierarchy())
             q.move();
 
         Double min = null;

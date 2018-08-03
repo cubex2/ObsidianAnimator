@@ -68,7 +68,7 @@ public class EntitySetupController
         } else if (!AnimationParenting.areUnrelated(child, parent) || !AnimationParenting.areUnrelated(parent, child))
         {
             JOptionPane.showMessageDialog(frame, "Parts are already related.", "Parenting issue", JOptionPane.ERROR_MESSAGE);
-        } else if (child.getParent() != null)
+        } else if (child.getParentPart() != null)
         {
             Object[] options = {"OK", "Remove parenting"};
             int n = JOptionPane.showOptionDialog(frame, child.getName() + " already has a parent.", "Parenting issue",

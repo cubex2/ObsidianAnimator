@@ -2,6 +2,7 @@ package obsidianAPI.render.bend;
 
 import net.minecraft.entity.Entity;
 import net.minecraftforge.client.model.obj.Vertex;
+import obsidianAPI.render.part.IPart;
 import obsidianAPI.render.part.PartObj;
 import org.lwjgl.opengl.GL11;
 
@@ -225,18 +226,10 @@ public class Bend
             bendPartTop = bendPartBottom;
         }
 
-        //Get all parents that need compensating for.
-        List<PartObj> parents = new ArrayList<PartObj>();
-        PartObj p = child;
-        while (p.hasParent())
+        for (IPart q : parent.createPartHierarchy())
         {
-            p = p.getParent();
-            parents.add(0, p);
-        }
-
-        //Compensate for all parents. TODO remove compensate Part rotation method
-        for (PartObj q : parents)
             compensatePartRotation(q);
+        }
     }
 
     public void render(Entity entity)
@@ -258,7 +251,7 @@ public class Bend
     /**
      * Adjust a glMatrix for a partObj p.
      */
-    private void compensatePartRotation(PartObj p)
+    private void compensatePartRotation(IPart p)
     {
         p.move();
     }
