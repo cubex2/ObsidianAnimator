@@ -72,9 +72,6 @@ public class RenderObj_Animator extends RenderLiving
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
         ItemStack itemstack1 = entity.getHeldItem();
 
-        float f4;
-
-
         if (itemstack1 != null)
         {
             GL11.glPushMatrix();
@@ -115,7 +112,6 @@ public class RenderObj_Animator extends RenderLiving
         {
             for (int i = 1; i <= 5; i++)
             {
-                // ItemStack item = new ItemStack(i == 1 ? Items.apple : (i == 2 ? Item.getItemFromBlock(Blocks.dirt) : Items.stone_sword));
                 GL11.glPushMatrix();
 
                 GL11.glRotatef(ModelObj.initRotFix, 1.0F, 0.0F, 0.0F);
@@ -129,19 +125,8 @@ public class RenderObj_Animator extends RenderLiving
                                modelObj.getPartFromName("shop_prop_scale_" + i));
 
 
-                //renderItem(entity, shopItem);
-
-                EntityItem entityitem = new EntityItem(entity.worldObj, 0.0, 0.0, 0.0, shopItem);
-                entityitem.getEntityItem().stackSize = 1;
-                entityitem.hoverStart = 0.0f;
-
-                //GL11.glScalef(2f,2f,2f);
-                //GL11.glPushMatrix();
-                //GL11.glRotatef(90, 1f, 0f, 0f);
-                //RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0, 0.0, 0.0, 0.0f, 0.0f);
                 GL11.glScalef(0.25f, 0.25f, 0.25f);
                 renderManager.itemRenderer.renderItem(entity, shopItem, 0, ItemRenderType.ENTITY);
-                //GL11.glPopMatrix();
 
                 GL11.glPopMatrix();
             }
