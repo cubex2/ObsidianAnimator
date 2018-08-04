@@ -1,2 +1,0 @@
-include ':API'
-project(':API').projectDir = new File(settingsDir, '../API')

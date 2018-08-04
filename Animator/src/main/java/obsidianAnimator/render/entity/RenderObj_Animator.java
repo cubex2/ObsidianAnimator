@@ -322,7 +322,7 @@ public class RenderObj_Animator extends RenderLiving
 
                 return;
             }
-            
+
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, ItemRenderType.EQUIPPED);
             boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(ItemRenderType.EQUIPPED, itemstack, ItemRendererHelper.BLOCK_3D));
 

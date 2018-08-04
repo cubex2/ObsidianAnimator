@@ -22,11 +22,6 @@ public class Util
         return (System.nanoTime() - startTimeNano) / 1000000000F * fps * multiplier + startTimeFrame;
     }
 
-    public static float getAnimationFrameTime(long now, long startTimeNano, float startTimeFrame, int fps, float multiplier)
-    {
-        return (float) ((now - startTimeNano) / 1000000000D * fps * multiplier + startTimeFrame);
-    }
-
     public static AnimationSequence createTransition(ModelObj model, String animName, Map<String, float[]> from, Map<String, float[]> to, float duration)
     {
         AnimationSequence seq = new AnimationSequence(model.entityName, "transition_" + animName);
