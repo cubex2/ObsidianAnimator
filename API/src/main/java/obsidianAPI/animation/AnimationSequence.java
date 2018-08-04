@@ -167,7 +167,8 @@ public class AnimationSequence
         {
             if (!part.getName().equals(exceptionPartName))
             {
-                TreeMap<Integer, AnimationPart> animations = partsByPartName.get(part.getInternalName());
+                TreeMap<Integer, AnimationPart> animations = partsByPartName.getOrDefault(part.getInternalName(),
+                                                                                          partsByPartName.get(part.getName()));
                 if (animations != null && animations.size() > 0)
                 {
                     AnimationPart anim = findPartForTime(animations, MathHelper.floor_float(time));
