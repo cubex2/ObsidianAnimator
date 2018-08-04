@@ -11,6 +11,7 @@ import net.minecraftforge.common.util.Constants;
 import obsidianAPI.render.ModelObj;
 import obsidianAPI.render.part.Part;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -167,17 +168,31 @@ public class AnimationSequence
         {
             if (!part.getName().equals(exceptionPartName))
             {
-                TreeMap<Integer, AnimationPart> animations = partsByPartName.getOrDefault(part.getInternalName(),
-                                                                                          partsByPartName.get(part.getName()));
-                if (animations != null && animations.size() > 0)
+                AnimationPart anim = getAnimPartAtTime(part, time);
+                if (anim != null)
                 {
-                    AnimationPart anim = findPartForTime(animations, MathHelper.floor_float(time));
-                    if (anim == null)
-                        anim = animations.lastEntry().getValue();
                     float frameTime = Math.min(time - anim.getStartTime(), anim.getEndTime() - anim.getStartTime());
                     anim.animatePart(part, frameTime);
                 }
             }
+        }
+    }
+
+    @Nullable
+    private AnimationPart getAnimPartAtTime(Part part, float time)
+    {
+        TreeMap<Integer, AnimationPart> animations = partsByPartName.getOrDefault(part.getInternalName(),
+                                                                                  partsByPartName.get(part.getName()));
+        if (animations != null && animations.size() > 0)
+        {
+            AnimationPart anim = findPartForTime(animations, MathHelper.floor_float(time));
+            if (anim == null)
+                anim = animations.lastEntry().getValue();
+
+            return anim;
+        } else
+        {
+            return null;
         }
     }
 
@@ -194,17 +209,15 @@ public class AnimationSequence
 
     public float[] getPartValueAtTime(Part part, float time)
     {
-        TreeMap<Integer, AnimationPart> animations = partsByPartName.getOrDefault(part.getInternalName(),
-                                                                                  partsByPartName.get(part.getName()));
-        if (animations != null && animations.size() > 0)
+        AnimationPart anim = getAnimPartAtTime(part, time);
+        if (anim != null)
         {
-            AnimationPart anim = findPartForTime(animations, MathHelper.floor_float(time));
-            if (anim == null)
-                anim = animations.lastEntry().getValue();
             float frameTime = Math.min(time - anim.getStartTime(), anim.getEndTime() - anim.getStartTime());
             return anim.getPartRotationAtTime(part, frameTime);
         } else
+        {
             return part.getOriginalValues();
+        }
     }
 
     private AnimationPart findPartForTime(TreeMap<Integer, AnimationPart> parts, int time)
