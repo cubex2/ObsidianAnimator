@@ -150,7 +150,7 @@ public class RenderObj_Animator extends RenderLiving
                 f3 = (float) (i >> 8 & 255) / 255.0F;
                 f4 = (float) (i & 255) / 255.0F;
                 GL11.glColor4f(f12, f3, f4, 1.0F);
-                this.renderManager.itemRenderer.renderItem(entity, itemstack1, k, ItemRenderType.ENTITY);
+                this.renderManager.itemRenderer.renderItem(entity, itemstack1, k);
             }
         } else
         {
@@ -159,7 +159,7 @@ public class RenderObj_Animator extends RenderLiving
             f12 = (float) (k >> 8 & 255) / 255.0F;
             f3 = (float) (k & 255) / 255.0F;
             GL11.glColor4f(f11, f12, f3, 1.0F);
-            this.renderManager.itemRenderer.renderItem(entity, itemstack1, 0, ItemRenderType.ENTITY);
+            this.renderManager.itemRenderer.renderItem(entity, itemstack1, 0);
         }
     }
 
