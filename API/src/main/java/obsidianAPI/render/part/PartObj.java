@@ -23,6 +23,7 @@ public class PartObj extends PartRotation
     private float[] rotationPoint;
     public GroupObject groupObj;
     private String displayName;
+    private String displayNameLowerCase;
 
     protected Map<Face, TextureCoordinate[]> defaultTextureCoords = Maps.newHashMap();
 
@@ -35,6 +36,7 @@ public class PartObj extends PartRotation
         super(modelObject, (groupObj.name.contains("_") ? groupObj.name.substring(0, groupObj.name.indexOf("_")) : groupObj.name).toLowerCase());
         this.groupObj = groupObj;
         this.displayName = getInternalName();
+        this.displayNameLowerCase = displayName.toLowerCase();
         setDefaultTCsToCurrentTCs();
     }
 
@@ -100,12 +102,13 @@ public class PartObj extends PartRotation
     @Nonnull
     public String getName()
     {
-        return displayName == null ? getInternalName() : displayName;
+        return displayNameLowerCase == null ? getInternalName() : displayNameLowerCase;
     }
 
     public void setDisplayName(String displayName)
     {
         this.displayName = displayName;
+        this.displayNameLowerCase = displayName == null ? null : displayName.toLowerCase();
     }
 
     public void setRotationPoint(float[] rot)

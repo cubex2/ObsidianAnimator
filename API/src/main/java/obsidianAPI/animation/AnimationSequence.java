@@ -77,7 +77,7 @@ public class AnimationSequence
 
     public Collection<AnimationPart> getAnimations(String partName)
     {
-        TreeMap<Integer, AnimationPart> parts = partsByPartName.get(partName);
+        TreeMap<Integer, AnimationPart> parts = partsByPartName.get(partName.toLowerCase());
         if (parts == null)
         {
             return Collections.emptyList();
