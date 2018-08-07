@@ -35,7 +35,7 @@ public class AnimationPart
         this.endTime = endTime;
         this.startPosition = startPosition;
         this.endPosition = endPosition;
-        this.partName = part.getName();
+        this.partName = part.getName().toLowerCase();
         init();
     }
 
@@ -166,7 +166,7 @@ public class AnimationPart
         this.endPosition[2] = compound.getFloat("ZEnd");
         this.startTime = compound.getInteger("StartTime");
         this.endTime = compound.getInteger("FinishTime");
-        this.partName = compound.getString("Part");
+        this.partName = compound.getString("Part").toLowerCase();
         init();
     }
 
