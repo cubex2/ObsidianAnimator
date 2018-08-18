@@ -346,6 +346,7 @@ public class RenderObj_Animator extends RenderLiving
             {
                 f2 = 0.625F;
 
+                GL11.glRotatef(180f, 0f, 0f, 1f);
                 //Prop scale
                 GL11.glScalef(1.0f + scaleVals[0], 1.0f + scaleVals[1], 1.0f + scaleVals[2]);
 
