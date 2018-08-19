@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -342,7 +341,7 @@ public class RenderObj_Animator extends RenderLiving
 
                 GL11.glRotatef(90f, 1f, 0f, 0f);
                 GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-            } else if (itemstack.getItem().isFull3D())
+            } else if (itemstack.getItem().isFull3D() || itemstack.getItem().getUnlocalizedName().toLowerCase().contains("shield"))
             {
                 f2 = 0.625F;
 
