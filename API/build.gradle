@@ -1,6 +1,4 @@
 buildscript {
-    ext.kotlin_version = '1.2.51'
-
     repositories {
         mavenCentral()
         maven {
@@ -19,6 +17,7 @@ buildscript {
 }
 
 configurations {
+    animatorApi
     embed
     compile.extendsFrom embed
 }
@@ -42,6 +41,8 @@ dependencies {
     embed "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     testCompile 'junit:junit:4.5'
+
+    animatorApi files(jar.archivePath)
 }
 
 sourceSets {

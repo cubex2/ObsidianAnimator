@@ -1,5 +1,7 @@
-include ':API'
-project(':API').projectDir = new File(settingsDir, 'API')
+rootProject.name = 'ObsidianAnimator'
 
-include ':Animator'
-project(':Animator').projectDir = new File(settingsDir, 'Animator')
+include 'API'
+project(':API').projectDir = new File('./API')
+
+include 'Animator'
+project(':Animator').projectDir = new File('./Animator')

@@ -1,6 +1,4 @@
 buildscript {
-    ext.kotlin_version = '1.2.51'
-
     repositories {
         mavenCentral()
         maven {
@@ -19,6 +17,7 @@ buildscript {
 }
 
 configurations {
+    animatorApi
     embed
     compile.extendsFrom embed
 }
@@ -40,7 +39,8 @@ minecraft {
 
 dependencies {
    embed "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-   compile project(':API')
+   compileOnly project(':ObsidianAnimator:API')
+   animatorApi project(path: ':ObsidianAnimator:API', configuration: 'animatorApi')
 }
 
 sourceSets {
@@ -69,6 +69,12 @@ processResources
 
 jar {
     configurations.embed.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+
+     configurations.animatorApi.each { dep ->
         from(project.zipTree(dep)) {
             exclude 'META-INF', 'META-INF/**'
         }
