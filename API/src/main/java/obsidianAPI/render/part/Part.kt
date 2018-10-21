@@ -5,7 +5,7 @@ import obsidianAPI.render.ModelObj
 /**
  * An abstract object for tracking information about a part (limb, position of model etc).
  */
-abstract class Part(@JvmField val modelObj: ModelObj, internalName: String) : IPart
+abstract class Part(@JvmField val modelObj: ModelObj?, internalName: String) : IPart
 {
     @JvmField
     protected var valueX: Float = 0.toFloat()
@@ -88,7 +88,7 @@ abstract class Part(@JvmField val modelObj: ModelObj, internalName: String) : IP
     override fun hashCode(): Int
     {
         var result = internalName.hashCode()
-        result = 31 * result + modelObj.hashCode()
+        result = 31 * result + (modelObj?.hashCode() ?: 0)
         return result
     }
 }
