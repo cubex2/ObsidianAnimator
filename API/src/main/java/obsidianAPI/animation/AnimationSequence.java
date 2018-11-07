@@ -181,8 +181,7 @@ public class AnimationSequence
     @Nullable
     private AnimationPart getAnimPartAtTime(Part part, float time)
     {
-        TreeMap<Integer, AnimationPart> animations = partsByPartName.getOrDefault(part.getInternalName(),
-                                                                                  partsByPartName.get(part.getName()));
+        TreeMap<Integer, AnimationPart> animations = partsByPartName.get(part.getName());
         if (animations != null && animations.size() > 0)
         {
             AnimationPart anim = findPartForTime(animations, MathHelper.floor_float(time));
@@ -198,10 +197,9 @@ public class AnimationSequence
 
     public Map<String, float[]> getPartValuesAtTime(ModelObj entityModel, float time)
     {
-        Map<String, float[]> partValues = new HashMap<String, float[]>();
+        Map<String, float[]> partValues = new HashMap<>();
         for (Part part : entityModel.getParts())
         {
-            partValues.put(part.getInternalName(), getPartValueAtTime(part, time));
             partValues.put(part.getName(), getPartValueAtTime(part, time));
         }
         return partValues;

@@ -13,6 +13,7 @@ import obsidianAnimator.render.entity.ModelObj_Animator;
 import obsidianAnimator.render.entity.RenderObj_Animator;
 import org.apache.commons.io.FileUtils;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -71,6 +72,7 @@ public class ModelHandler
         return models.containsKey(entityName);
     }
 
+    @Nullable
     public static ModelObj_Animator getModel(String entityName)
     {
         return models.get(entityName);

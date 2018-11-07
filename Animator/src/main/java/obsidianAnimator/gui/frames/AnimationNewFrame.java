@@ -2,6 +2,7 @@ package obsidianAnimator.gui.frames;
 
 import obsidianAPI.animation.AnimationPart;
 import obsidianAPI.animation.AnimationSequence;
+import obsidianAPI.io.AnimationFileLoader;
 import obsidianAPI.render.ModelObj;
 import obsidianAnimator.data.ModelHandler;
 import obsidianAnimator.file.FileChooser;
@@ -170,7 +171,7 @@ public class AnimationNewFrame extends BaseFrame
         if (templateFile != null)
         {
             ModelObj model = ModelHandler.getModel(entityName);
-            AnimationSequence template = FileHandler.getAnimationFromFile(templateFile);
+            AnimationSequence template = AnimationFileLoader.INSTANCE.load(templateFile, model);
             if (!isValidTemplate(template, model))
             {
                 JOptionPane.showMessageDialog(frame, "Invalid template for this model");

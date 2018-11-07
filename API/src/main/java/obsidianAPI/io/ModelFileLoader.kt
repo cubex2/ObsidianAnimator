@@ -15,9 +15,18 @@ object ModelFileLoader
         return load(FileInputStream(file))
     }
 
-    fun load(location: ResourceLocation): ModelDefinition
+    @JvmOverloads
+    fun load(location: ResourceLocation, onServer: Boolean = false): ModelDefinition
     {
-        return load(Minecraft.getMinecraft().resourceManager.getResource(location).inputStream)
+        return if (onServer)
+        {
+            val classLoader = ModelFileLoader::class.java.classLoader
+            val path = "assets/" + location.resourceDomain + "/" + location.resourcePath
+            load(classLoader.getResourceAsStream(path))
+        } else
+        {
+            load(Minecraft.getMinecraft().resourceManager.getResource(location).inputStream)
+        }
     }
 
     fun load(inputStream: InputStream): ModelDefinition

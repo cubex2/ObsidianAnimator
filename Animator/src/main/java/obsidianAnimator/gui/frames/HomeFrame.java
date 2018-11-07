@@ -2,9 +2,10 @@ package obsidianAnimator.gui.frames;
 
 import net.minecraft.client.Minecraft;
 import obsidianAPI.animation.AnimationSequence;
+import obsidianAPI.io.AnimationFileLoader;
+import obsidianAPI.render.ModelObj;
 import obsidianAnimator.data.ModelHandler;
 import obsidianAnimator.file.FileChooser;
-import obsidianAnimator.file.FileHandler;
 import obsidianAnimator.file.FileNotChosenException;
 import obsidianAnimator.gui.GuiBlack;
 import obsidianAnimator.gui.timeline.TimelineController;
@@ -67,14 +68,18 @@ public class HomeFrame extends BaseFrame
         try
         {
             File animationFile = FileChooser.loadAnimationFile(frame);
-            AnimationSequence sequence = FileHandler.getAnimationFromFile(animationFile);
-            if (ModelHandler.isModelImported(sequence.getEntityName()))
+            AnimationSequence sequence = AnimationFileLoader.INSTANCE.load(animationFile, null);
+            ModelObj model = ModelHandler.getModel(sequence.getEntityName());
+            if (model != null)
             {
+                AnimationFileLoader.INSTANCE.fixAnimationPartNames(sequence, model);
                 frame.dispose();
                 new TimelineController(animationFile, sequence).display();
             } else
+            {
                 JOptionPane.showMessageDialog(frame, "You must import the " + sequence.getEntityName() + " model first.");
-        } catch (FileNotChosenException e) {}
+            }
+        } catch (FileNotChosenException ignored) {}
     }
 
     private void modelListPressed()

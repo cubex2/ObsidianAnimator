@@ -4,7 +4,9 @@ import net.minecraft.nbt.CompressedStreamTools;
 import obsidianAPI.animation.AnimationSequence;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class FileHandler
 {
@@ -21,21 +23,15 @@ public class FileHandler
     public static File lastModelDirectory;
     public static File lastAnimationDirectory;
 
-    public static AnimationSequence getAnimationFromFile(File animationFile)
-    {
-        try
-        {
-            return new AnimationSequence(CompressedStreamTools.readCompressed(new FileInputStream(animationFile)));
-        } catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
-        return null;
-    }
-
     public static void saveAnimationSequence(File animationFile, AnimationSequence sequence)
     {
         try
         {
             CompressedStreamTools.writeCompressed(sequence.getSaveData(), new FileOutputStream(animationFile));
-        } catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 }
