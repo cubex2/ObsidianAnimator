@@ -2,8 +2,12 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
-            url = "../../maven"
+            name = "chronocraft"
+            url "$mavenRepo"
+            credentials {
+                username "$mavenUser"
+                password "$mavenPassword"
+            }
         }
         maven {
             name = "sonatype"
@@ -21,8 +25,12 @@ buildscript {
 repositories {
         jcenter()
         maven {
-            name = "forge"
-            url = "../../maven"
+            name = "chronocraft"
+            url "$mavenRepo"
+            credentials {
+                username "$mavenUser"
+                password "$mavenPassword"
+            }
         }
         maven {
             name = "sonatype"
